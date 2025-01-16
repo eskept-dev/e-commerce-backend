@@ -1,0 +1,15 @@
+# Config files
+config/app.*.yaml
+!config/app.example.yaml
+
+# Other common ignores
+.env
+.idea/
+.vscode/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out 

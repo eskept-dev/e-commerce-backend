@@ -1,0 +1,14 @@
+server:
+  port: "8080"
+
+database:
+  host: "localhost"
+  port: "5432"
+  user: "eskept"
+  password: "password"
+  dbname: "dev_database"
+  sslmode: false
+
+cache:
+  host: "localhost"
+  port: "6379"
