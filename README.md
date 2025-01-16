@@ -5,7 +5,7 @@
 ```bash
 docker run \
 --name eskept-postgres \
--p 5432:10001 \
+-p 10001:5432 \
 -e POSTGRES_USER=eskept \
 -e POSTGRES_PASSWORD=password \
 -e POSTGRES_DB=eskept \
@@ -17,7 +17,7 @@ docker run \
 ```bash
 docker run \
 --name eskept-redis \
--p 6379:10002 \
+-p 10002:6379 \
 -d redis
 ```
 
