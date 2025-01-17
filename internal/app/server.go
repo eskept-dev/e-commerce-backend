@@ -1,6 +1,7 @@
 package app
 
 import (
+	"eskept/internal/app/routes"
 	"eskept/internal/context"
 	"eskept/pkg/config"
 	"eskept/pkg/database"
@@ -31,7 +32,7 @@ func (s *Server) Run() {
 	}
 
 	// Initialize router
-	router := &Router{}
+	router := &routes.Router{}
 	err = router.NewRouter(AppContext)
 	if err != nil {
 		panic(fmt.Errorf("failed to initialize router: %w", err))

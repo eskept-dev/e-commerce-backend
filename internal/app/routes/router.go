@@ -1,6 +1,7 @@
-package app
+package routes
 
 import (
+	v1 "eskept/internal/app/routes/v1"
 	"eskept/internal/context"
 	"net/http"
 
@@ -32,8 +33,8 @@ func (r *Router) SetupRouter(ctx *context.AppContext) {
 	})
 
 	// Setup API versions
-	apiV1 := r.routerEngine.Group("/api/v1")
+	v1Group := r.routerEngine.Group("/api/v1")
 	{
-		r.setupV1Routes(apiV1, ctx)
+		v1.SetupV1Routes(v1Group, ctx)
 	}
 }

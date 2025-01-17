@@ -40,3 +40,27 @@ func (h *UserHandler) Register(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, user)
 }
+
+func (h *UserHandler) Login(c *gin.Context) {
+	var req schemas.UserLoginRequest
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	_, err := h.service.Login(req.Email, req.Password)
+	if err != nil {
+		if err == errors.ErrInvalidCredentials {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error":  "could not login user",
+				"detail": err.Error(),
+			})
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "success"})
+}

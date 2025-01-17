@@ -32,3 +32,18 @@ func (s *UserService) Register(email, password string) (*models.User, error) {
 	}
 	return user, nil
 }
+
+func (s *UserService) Login(email, password string) (*models.User, error) {
+	// Find user by email
+	user, err := s.repo.FindByEmail(email)
+	if err != nil {
+		return nil, err
+	}
+
+	// Check password
+	if !user.ComparePassword(password) {
+		return nil, errors.ErrInvalidCredentials
+	}
+
+	return user, nil
+}
