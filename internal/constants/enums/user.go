@@ -1,4 +1,4 @@
-package constants
+package enums
 
 type UserRoles string
 

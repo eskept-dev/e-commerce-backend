@@ -1,7 +1,7 @@
 package services
 
 import (
-	"eskept/internal/errors"
+	"eskept/internal/constants/errors"
 	"eskept/internal/models"
 	"eskept/internal/repositories"
 )

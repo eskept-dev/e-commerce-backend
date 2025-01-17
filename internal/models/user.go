@@ -1,7 +1,7 @@
 package models
 
 import (
-	"eskept/internal/constants"
+	"eskept/internal/constants/enums"
 
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
@@ -13,11 +13,11 @@ const (
 
 type User struct {
 	BaseModel
-	DeletedAt int64                `json:"deleted_at"`
-	Status    constants.UserStatus `json:"status" gorm:"default:pending_activation"`
-	UserRoles constants.UserRoles  `json:"role" gorm:"default:user_guest"`
-	Email     string               `json:"email"`
-	Password  string               `json:"password"`
+	DeletedAt int64            `json:"deleted_at"`
+	Status    enums.UserStatus `json:"status" gorm:"default:pending_activation"`
+	UserRoles enums.UserRoles  `json:"role" gorm:"default:user_guest"`
+	Email     string           `json:"email"`
+	Password  string           `json:"password"`
 }
 
 func (u *User) TableName() string {

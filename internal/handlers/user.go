@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"eskept/internal/errors"
+	"eskept/internal/constants/errors"
 	"eskept/internal/schemas"
 	"eskept/internal/services"
 	"net/http"

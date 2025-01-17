@@ -1,7 +1,7 @@
 package repositories
 
 import (
-	"eskept/internal/context"
+	"eskept/internal/app/context"
 	"eskept/internal/models"
 
 	"github.com/google/uuid"

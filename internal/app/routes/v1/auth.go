@@ -1,7 +1,7 @@
 package v1
 
 import (
-	"eskept/internal/context"
+	"eskept/internal/app/context"
 	"eskept/internal/handlers"
 	"eskept/internal/repositories"
 	"eskept/internal/services"
