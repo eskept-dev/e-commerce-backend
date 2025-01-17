@@ -26,14 +26,14 @@ func InitPostgres(databaseConfig config.DatabaseConfig) (*gorm.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	log.Printf("Connected to database successfully")
+	log.Println("Connected to database successfully")
 
 	// Migrate the database
 	err = Migrate(db)
 	if err != nil {
 		return nil, err
 	}
-	log.Printf("Database migrated successfully")
+	log.Println("Database migrated successfully")
 
 	return db, nil
 }
