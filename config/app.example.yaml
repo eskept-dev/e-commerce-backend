@@ -1,14 +1,19 @@
 server:
-  port: "8080"
+  port: 8080
+
+jwt:
+  secret: "secret"
+  token_expiration_time: 3600
+  refresh_token_expiration_time: 86400
 
 database:
   host: "localhost"
-  port: "5432"
+  port: 5432
   user: "eskept"
   password: "password"
-  dbname: "dev_database"
-  sslmode: "disable"
+  db_name: "dev_database"
+  ssl_mode: "disable"
 
 cache:
   host: "localhost"
-  port: "6379"
+  port: 6379

@@ -11,15 +11,16 @@ type Config struct {
 	Server   ServerConfig   `mapstructure:"server"`
 	Database DatabaseConfig `mapstructure:"database"`
 	Cache    CacheConfig    `mapstructure:"cache"`
+	JWT      JWTConfig      `mapstructure:"jwt"`
 }
 
 type ServerConfig struct {
-	Port string `mapstructure:"port"`
+	Port int `mapstructure:"port"`
 }
 
 type DatabaseConfig struct {
 	Host     string `mapstructure:"host"`
-	Port     string `mapstructure:"port"`
+	Port     int    `mapstructure:"port"`
 	User     string `mapstructure:"user"`
 	Password string `mapstructure:"password"`
 	DBName   string `mapstructure:"db_name"`
@@ -28,7 +29,13 @@ type DatabaseConfig struct {
 
 type CacheConfig struct {
 	Host string `mapstructure:"host"`
-	Port string `mapstructure:"port"`
+	Port int    `mapstructure:"port"`
+}
+
+type JWTConfig struct {
+	Secret                     string `mapstructure:"secret"`
+	TokenExpirationTime        int    `mapstructure:"token_expiration_time"`
+	RefreshTokenExpirationTime int    `mapstructure:"refresh_token_expiration_time"`
 }
 
 func LoadConfig(path string) (*Config, error) {

@@ -12,7 +12,7 @@ import (
 
 func InitPostgres(databaseConfig config.DatabaseConfig) (*gorm.DB, error) {
 	// Generate the database DSN
-	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
+	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s",
 		databaseConfig.Host,
 		databaseConfig.Port,
 		databaseConfig.User,
