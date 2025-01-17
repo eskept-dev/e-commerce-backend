@@ -7,7 +7,7 @@ database:
   user: "eskept"
   password: "password"
   dbname: "dev_database"
-  sslmode: false
+  sslmode: "disable"
 
 cache:
   host: "localhost"
