@@ -1,17 +1,24 @@
 package context
 
 import (
+	"eskept/pkg/config"
+
 	"gorm.io/gorm"
 )
 
 // AppContext holds shared resources for the application
 type AppContext struct {
-	DB *gorm.DB
+	DB  *gorm.DB
+	Cfg *config.Config
 }
 
 // NewAppContext initializes and returns a new AppContext
-func NewAppContext(db *gorm.DB) *AppContext {
+func NewAppContext(
+	db *gorm.DB,
+	cfg *config.Config,
+) *AppContext {
 	return &AppContext{
-		DB: db,
+		DB:  db,
+		Cfg: cfg,
 	}
 }

@@ -28,7 +28,8 @@ func (s *Server) Run() {
 
 	// App context
 	AppContext := &context.AppContext{
-		DB: db,
+		DB:  db,
+		Cfg: s.config,
 	}
 
 	// Initialize router
@@ -42,5 +43,5 @@ func (s *Server) Run() {
 	router.SetupRouter(AppContext)
 
 	// Start the server
-	router.Run(fmt.Sprintf(":%s", s.config.Server.Port))
+	router.Run(fmt.Sprintf(":%d", s.config.Server.Port))
 }

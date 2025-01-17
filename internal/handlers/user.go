@@ -6,15 +6,18 @@ import (
 	"eskept/internal/services"
 	"net/http"
 
+	"eskept/internal/app/context"
+
 	"github.com/gin-gonic/gin"
 )
 
 type UserHandler struct {
 	service *services.UserService
+	appCtx  *context.AppContext
 }
 
-func NewUserHandler(service *services.UserService) *UserHandler {
-	return &UserHandler{service: service}
+func NewUserHandler(service *services.UserService, appCtx *context.AppContext) *UserHandler {
+	return &UserHandler{service: service, appCtx: appCtx}
 }
 
 func (h *UserHandler) Register(c *gin.Context) {

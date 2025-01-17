@@ -1,17 +1,22 @@
 package services
 
 import (
+	"eskept/internal/app/context"
 	"eskept/internal/constants/errors"
 	"eskept/internal/models"
 	"eskept/internal/repositories"
 )
 
 type UserService struct {
-	repo *repositories.UserRepository
+	repo   *repositories.UserRepository
+	appCtx *context.AppContext
 }
 
-func NewUserService(repo *repositories.UserRepository) *UserService {
-	return &UserService{repo: repo}
+func NewUserService(
+	repo *repositories.UserRepository,
+	appCtx *context.AppContext,
+) *UserService {
+	return &UserService{repo: repo, appCtx: appCtx}
 }
 
 func (s *UserService) Register(email, password string) (*models.User, error) {
