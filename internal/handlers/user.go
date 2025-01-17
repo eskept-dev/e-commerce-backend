@@ -18,7 +18,7 @@ func NewUserHandler(service *services.UserService) *UserHandler {
 }
 
 func (h *UserHandler) Register(c *gin.Context) {
-	var req schemas.UserRegisterRequest
+	var req schemas.AuthRegisterRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -42,7 +42,7 @@ func (h *UserHandler) Register(c *gin.Context) {
 }
 
 func (h *UserHandler) Login(c *gin.Context) {
-	var req schemas.UserLoginRequest
+	var req schemas.AuthLoginRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
