@@ -1,10 +1,10 @@
 package app
 
 import (
+	"eskept/internal/context"
 	"eskept/internal/handlers"
 	"eskept/internal/repositories"
 	"eskept/internal/services"
-	"eskept/pkg/context"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

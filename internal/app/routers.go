@@ -1,7 +1,7 @@
 package app
 
 import (
-	"eskept/pkg/context"
+	"eskept/internal/context"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

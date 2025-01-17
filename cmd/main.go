@@ -4,13 +4,7 @@ import (
 	"eskept/internal/app"
 	"eskept/pkg/config"
 	"fmt"
-
-	"gorm.io/gorm"
 )
-
-type AppContext struct {
-	DB *gorm.DB
-}
 
 func main() {
 	// Load configuration

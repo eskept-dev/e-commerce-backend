@@ -1,8 +1,8 @@
 package app
 
 import (
+	"eskept/internal/context"
 	"eskept/pkg/config"
-	"eskept/pkg/context"
 	"eskept/pkg/database"
 	"fmt"
 )

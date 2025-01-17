@@ -34,7 +34,7 @@ type CacheConfig struct {
 func LoadConfig(path string) (*Config, error) {
 	env := os.Getenv("APP_ENV")
 	if env == "" {
-		env = "development" // Default to development if not specified
+		env = "development"
 	}
 
 	viper.AddConfigPath(path)

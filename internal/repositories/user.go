@@ -1,8 +1,8 @@
 package repositories
 
 import (
+	"eskept/internal/context"
 	"eskept/internal/models"
-	"eskept/pkg/context"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
