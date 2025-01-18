@@ -3,6 +3,7 @@ package app
 import (
 	"eskept/internal/app/context"
 	"eskept/internal/app/routes"
+	"eskept/pkg/cache"
 	"eskept/pkg/config"
 	"eskept/pkg/database"
 	"fmt"
@@ -26,10 +27,17 @@ func (s *Server) Run() {
 		panic(fmt.Errorf("failed to initialize database: %w", err))
 	}
 
+	// Initialize cache connection
+	cacheRedis, err := cache.InitRedis(&s.config.Cache)
+	if err != nil {
+		panic(fmt.Errorf("failed to initialize cache: %w", err))
+	}
+
 	// App context
 	AppContext := &context.AppContext{
-		DB:  db,
-		Cfg: s.config,
+		DB:    db,
+		Cache: cacheRedis,
+		Cfg:   s.config,
 	}
 
 	// Initialize router

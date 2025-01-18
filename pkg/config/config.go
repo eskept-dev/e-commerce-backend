@@ -28,8 +28,9 @@ type DatabaseConfig struct {
 }
 
 type CacheConfig struct {
-	Host string `mapstructure:"host"`
-	Port int    `mapstructure:"port"`
+	Host     string `mapstructure:"host"`
+	Port     int    `mapstructure:"port"`
+	Password string `mapstructure:"password"`
 }
 
 type JWTConfig struct {
