@@ -32,7 +32,7 @@ func (s *EmailService) GenerateActivationLink(email, role string) (string, error
 	return activationLink, nil
 }
 
-func (s *EmailService) SendActivationLink(email, role string) error {
+func (s *EmailService) SendActivationEmail(email, role string) error {
 	activationLink, err := s.GenerateActivationLink(email, role)
 	if err != nil {
 		return err

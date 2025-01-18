@@ -92,7 +92,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	})
 }
 
-func (h *AuthHandler) SendActivationLink(c *gin.Context) {
+func (h *AuthHandler) SendActivationEmail(c *gin.Context) {
 	var req schemas.AuthSendActivationRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -111,7 +111,7 @@ func (h *AuthHandler) SendActivationLink(c *gin.Context) {
 		return
 	}
 
-	err = h.emailService.SendActivationLink(req.Email, string(user.Role))
+	err = h.emailService.SendActivationEmail(req.Email, string(user.Role))
 	if err != nil {
 		log.Println(err)
 		if err == errors.ErrInvalidCredentials {
