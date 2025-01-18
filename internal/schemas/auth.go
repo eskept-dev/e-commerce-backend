@@ -34,7 +34,7 @@ type AuthSendActivationRequest struct {
 }
 
 type AuthSendActivationResponse struct {
-	ActivationLink string `json:"activation_link"`
+	IsSuccess bool `json:"is_success"`
 }
 
 type AuthActivateRequest struct {

@@ -8,7 +8,7 @@ jwt:
   secret: "secret"
   token_expiration_time: 3600
   refresh_token_expiration_time: 86400
-  activation_token_expiration_time: 3600
+  activation_token_expiration_time: 86400
 
 database:
   host: "localhost"
@@ -21,3 +21,13 @@ database:
 cache:
   host: "localhost"
   port: 6379
+
+smtp:
+  host: "smtp.localhost"
+  port: 587
+  email: "admin@localhost.com"
+  password: "password"
+  
+template:
+  email_activation: "templates/email/activation.html"
+  email_reset_password: "templates/email/reset_password.html"

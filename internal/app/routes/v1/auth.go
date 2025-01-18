@@ -17,7 +17,8 @@ func SetupV1Routes(group *gin.RouterGroup, ctx *context.AppContext) {
 func setupAuthGroup(group *gin.RouterGroup, ctx *context.AppContext) {
 	userRepository := repositories.NewUserRepository(ctx)
 	authService := services.NewAuthService(userRepository, ctx)
-	authHandler := handlers.NewAuthHandler(userRepository, authService, ctx)
+	emailService := services.NewEmailService(userRepository, ctx)
+	authHandler := handlers.NewAuthHandler(userRepository, authService, emailService, ctx)
 
 	userGroupApi := group.Group("/auth")
 	{

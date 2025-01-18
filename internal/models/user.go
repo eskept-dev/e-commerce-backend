@@ -17,7 +17,7 @@ type User struct {
 	BaseModel
 	DeletedAt int64            `json:"deleted_at"`
 	Status    enums.UserStatus `json:"status" gorm:"default:pending_activation"`
-	UserRoles enums.UserRoles  `json:"role" gorm:"default:user_guest"`
+	Role      enums.UserRoles  `json:"role" gorm:"default:user_guest"`
 	Email     string           `json:"email"`
 	Password  string           `json:"password"`
 }

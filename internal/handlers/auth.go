@@ -14,20 +14,23 @@ import (
 )
 
 type AuthHandler struct {
-	repo    *repositories.UserRepository
-	service *services.AuthService
-	appCtx  *context.AppContext
+	repo         *repositories.UserRepository
+	service      *services.AuthService
+	emailService *services.EmailService
+	appCtx       *context.AppContext
 }
 
 func NewAuthHandler(
 	repo *repositories.UserRepository,
 	service *services.AuthService,
+	emailService *services.EmailService,
 	appCtx *context.AppContext,
 ) *AuthHandler {
 	return &AuthHandler{
-		repo:    repo,
-		service: service,
-		appCtx:  appCtx,
+		repo:         repo,
+		service:      service,
+		emailService: emailService,
+		appCtx:       appCtx,
 	}
 }
 
@@ -108,7 +111,7 @@ func (h *AuthHandler) SendActivationLink(c *gin.Context) {
 		return
 	}
 
-	activationLink, err := h.service.GenerateActivationLink(user.Email, string(user.UserRoles))
+	err = h.emailService.SendActivationLink(req.Email, string(user.Role))
 	if err != nil {
 		log.Println(err)
 		if err == errors.ErrInvalidCredentials {
@@ -120,7 +123,7 @@ func (h *AuthHandler) SendActivationLink(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, schemas.AuthSendActivationResponse{
-		ActivationLink: activationLink,
+		IsSuccess: true,
 	})
 }
 

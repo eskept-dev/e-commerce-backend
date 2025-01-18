@@ -13,6 +13,8 @@ type Config struct {
 	Database DatabaseConfig `mapstructure:"database"`
 	Cache    CacheConfig    `mapstructure:"cache"`
 	JWT      JWTConfig      `mapstructure:"jwt"`
+	SMTP     SMTPConfig     `mapstructure:"smtp"`
+	Template TemplateConfig `mapstructure:"template"`
 }
 
 type AppConfig struct {
@@ -43,6 +45,18 @@ type JWTConfig struct {
 	TokenExpirationTime           int    `mapstructure:"token_expiration_time"`
 	RefreshTokenExpirationTime    int    `mapstructure:"refresh_token_expiration_time"`
 	ActivationTokenExpirationTime int    `mapstructure:"activation_token_expiration_time"`
+}
+
+type TemplateConfig struct {
+	EmailActivation    string `mapstructure:"email_activation"`
+	EmailResetPassword string `mapstructure:"email_reset_password"`
+}
+
+type SMTPConfig struct {
+	Host     string `mapstructure:"host"`
+	Port     int    `mapstructure:"port"`
+	Email    string `mapstructure:"email"`
+	Password string `mapstructure:"password"`
 }
 
 func LoadConfig(path string) (*Config, error) {
