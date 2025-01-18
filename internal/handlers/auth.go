@@ -135,9 +135,7 @@ func (h *AuthHandler) Activate(c *gin.Context) {
 		return
 	}
 
-	log.Println("ActivationToken:", req.ActivationToken)
-
-	err := h.service.ActivateUser(req.ActivationToken)
+	err := h.service.ActivateUserByActivationToken(req.ActivationToken)
 	if err != nil {
 		log.Println(err)
 		switch err {

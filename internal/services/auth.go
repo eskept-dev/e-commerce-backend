@@ -82,7 +82,7 @@ func (s *AuthService) GenerateTokens(email, role string) (types.TokenPair, error
 	}, nil
 }
 
-func (s *AuthService) ActivateUser(activationToken string) error {
+func (s *AuthService) ActivateUserByActivationToken(activationToken string) error {
 	claims, err := jwt.ValidateToken(activationToken, s.appCtx)
 	if err != nil {
 		return err
