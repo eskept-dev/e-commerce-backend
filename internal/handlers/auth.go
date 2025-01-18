@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"eskept/internal/constants/errors"
+	"eskept/internal/repositories"
 	"eskept/internal/schemas"
 	"eskept/internal/services"
 	"log"
@@ -13,12 +14,21 @@ import (
 )
 
 type AuthHandler struct {
+	repo    *repositories.UserRepository
 	service *services.AuthService
 	appCtx  *context.AppContext
 }
 
-func NewAuthHandler(service *services.AuthService, appCtx *context.AppContext) *AuthHandler {
-	return &AuthHandler{service: service, appCtx: appCtx}
+func NewAuthHandler(
+	repo *repositories.UserRepository,
+	service *services.AuthService,
+	appCtx *context.AppContext,
+) *AuthHandler {
+	return &AuthHandler{
+		repo:    repo,
+		service: service,
+		appCtx:  appCtx,
+	}
 }
 
 func (h *AuthHandler) Register(c *gin.Context) {
@@ -51,16 +61,16 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		return
 	}
 
-	_, err := h.service.IsAuthenticated(req.Email, req.Password)
-	if err != nil {
-		log.Println(err.Error())
-		if err == errors.ErrInvalidCredentials {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
-		} else {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		}
-		return
-	}
+	// _, err := h.service.IsAuthenticated(req.Email, req.Password)
+	// if err != nil {
+	// 	log.Println(err.Error())
+	// 	if err == errors.ErrInvalidCredentials {
+	// 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+	// 	} else {
+	// 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	// 	}
+	// 	return
+	// }
 
 	tokenPair, err := h.service.GenerateTokens(req.Email, req.Password)
 	if err != nil {
@@ -76,5 +86,67 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	c.JSON(http.StatusOK, schemas.AuthLoginResponse{
 		AccessToken:  tokenPair.AccessToken,
 		RefreshToken: tokenPair.RefreshToken,
+	})
+}
+
+func (h *AuthHandler) SendActivationLink(c *gin.Context) {
+	var req schemas.AuthSendActivationRequest
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	user, err := h.repo.FindByEmail(req.Email)
+	if err != nil {
+		log.Println(err)
+		if err == errors.ErrUserNotFound {
+			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": errors.ErrInternalServerError.Error()})
+		}
+		return
+	}
+
+	activationLink, err := h.service.GenerateActivationLink(user.Email, string(user.UserRoles))
+	if err != nil {
+		log.Println(err)
+		if err == errors.ErrInvalidCredentials {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": errors.ErrInternalServerError.Error()})
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, schemas.AuthSendActivationResponse{
+		ActivationLink: activationLink,
+	})
+}
+
+func (h *AuthHandler) Activate(c *gin.Context) {
+	var req schemas.AuthActivateRequest
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	log.Println("ActivationToken:", req.ActivationToken)
+
+	err := h.service.ActivateUser(req.ActivationToken)
+	if err != nil {
+		log.Println(err)
+		switch err {
+		case errors.ErrTokenExpired, errors.ErrInvalidToken:
+			c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		default:
+			c.JSON(http.StatusInternalServerError, gin.H{"error": errors.ErrInternalServerError.Error()})
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, schemas.AuthActivateResponse{
+		IsActivated: true,
 	})
 }

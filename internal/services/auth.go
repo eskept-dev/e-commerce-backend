@@ -76,3 +76,28 @@ func (s *AuthService) GenerateTokens(email, role string) (types.TokenPair, error
 		RefreshToken: refreshToken,
 	}, nil
 }
+
+func (s *AuthService) GenerateActivationLink(email, role string) (string, error) {
+	activationToken, err := jwt.GenerateActivationToken(email, role, s.appCtx)
+	if err != nil {
+		return "", err
+	}
+
+	activationLink := s.appCtx.Cfg.App.ActivationURL + "?activationToken=" + activationToken
+	return activationLink, nil
+}
+
+func (s *AuthService) ActivateUser(activationToken string) error {
+	claims, err := jwt.ValidateToken(activationToken, s.appCtx)
+	if err != nil {
+		return err
+	}
+
+	user, err := s.repo.FindByEmail(claims.Email)
+	if err != nil {
+		return err
+	}
+
+	user.Status = enums.UserStatusEnabled
+	return s.repo.Update(user)
+}

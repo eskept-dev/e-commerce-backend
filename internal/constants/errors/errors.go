@@ -8,6 +8,10 @@ var (
 	ErrEmailExists        = errors.New("EMAIL_ALREADY_EXISTS")
 	ErrUserNotEnabled     = errors.New("USER_NOT_ENABLED")
 
+	// Authorization errors
+	ErrInvalidToken = errors.New("INVALID_TOKEN")
+	ErrTokenExpired = errors.New("TOKEN_EXPIRED")
+
 	// Database errors
 	ErrUserNotFound = errors.New("USER_NOT_FOUND")
 

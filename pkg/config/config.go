@@ -8,10 +8,15 @@ import (
 )
 
 type Config struct {
+	App      AppConfig      `mapstructure:"app"`
 	Server   ServerConfig   `mapstructure:"server"`
 	Database DatabaseConfig `mapstructure:"database"`
 	Cache    CacheConfig    `mapstructure:"cache"`
 	JWT      JWTConfig      `mapstructure:"jwt"`
+}
+
+type AppConfig struct {
+	ActivationURL string `mapstructure:"activation_url"`
 }
 
 type ServerConfig struct {
@@ -34,9 +39,10 @@ type CacheConfig struct {
 }
 
 type JWTConfig struct {
-	Secret                     string `mapstructure:"secret"`
-	TokenExpirationTime        int    `mapstructure:"token_expiration_time"`
-	RefreshTokenExpirationTime int    `mapstructure:"refresh_token_expiration_time"`
+	Secret                        string `mapstructure:"secret"`
+	TokenExpirationTime           int    `mapstructure:"token_expiration_time"`
+	RefreshTokenExpirationTime    int    `mapstructure:"refresh_token_expiration_time"`
+	ActivationTokenExpirationTime int    `mapstructure:"activation_token_expiration_time"`
 }
 
 func LoadConfig(path string) (*Config, error) {

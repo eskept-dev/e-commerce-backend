@@ -28,3 +28,19 @@ type AuthLoginRequest struct {
 	Email    string `json:"email" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
+
+type AuthSendActivationRequest struct {
+	Email string `json:"email" binding:"required"`
+}
+
+type AuthSendActivationResponse struct {
+	ActivationLink string `json:"activation_link"`
+}
+
+type AuthActivateRequest struct {
+	ActivationToken string `json:"activationToken" binding:"required"`
+}
+
+type AuthActivateResponse struct {
+	IsActivated bool `json:"is_activated"`
+}

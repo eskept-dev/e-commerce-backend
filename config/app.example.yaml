@@ -1,10 +1,14 @@
+app:
+  activation_url: "http://localhost:8000"
+
 server:
-  port: 8080
+  port: 8000
 
 jwt:
   secret: "secret"
   token_expiration_time: 3600
   refresh_token_expiration_time: 86400
+  activation_token_expiration_time: 3600
 
 database:
   host: "localhost"
