@@ -4,6 +4,7 @@ import (
 	"eskept/internal/constants/errors"
 	"eskept/internal/schemas"
 	"eskept/internal/services"
+	"log"
 	"net/http"
 
 	"eskept/internal/app/context"
@@ -30,6 +31,7 @@ func (h *AuthHandler) Register(c *gin.Context) {
 
 	user, err := h.service.Register(req.Email, req.Password)
 	if err != nil {
+		log.Fatalln(err)
 		if err == errors.ErrEmailExists {
 			c.JSON(http.StatusConflict, gin.H{"error": err.Error()})
 		} else {
@@ -52,18 +54,21 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		return
 	}
 
-	_, err := h.service.Login(req.Email, req.Password)
+	tokenPair, err := h.service.Login(req.Email, req.Password)
 	if err != nil {
+		log.Fatalln(err)
 		if err == errors.ErrInvalidCredentials {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+			c.JSON(http.StatusUnauthorized, gin.H{"error": errors.ErrInvalidCredentials.Error()})
 		} else {
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error":  "could not login user",
-				"detail": err.Error(),
+				"error": errors.ErrInternalServerError.Error(),
 			})
 		}
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "success"})
+	c.JSON(http.StatusOK, schemas.AuthLoginResponse{
+		AccessToken:  tokenPair.AccessToken,
+		RefreshToken: tokenPair.RefreshToken,
+	})
 }

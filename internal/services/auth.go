@@ -5,6 +5,8 @@ import (
 	"eskept/internal/constants/errors"
 	"eskept/internal/models"
 	"eskept/internal/repositories"
+	"eskept/internal/types"
+	jwt "eskept/internal/utils/auth"
 )
 
 type AuthService struct {
@@ -38,17 +40,30 @@ func (s *AuthService) Register(email, password string) (*models.User, error) {
 	return user, nil
 }
 
-func (s *AuthService) Login(email, password string) (*models.User, error) {
+func (s *AuthService) Login(email, password string) (types.TokenPair, error) {
 	// Find user by email
 	user, err := s.repo.FindByEmail(email)
 	if err != nil {
-		return nil, err
+		return types.TokenPair{}, err
 	}
 
 	// Check password
 	if !user.ComparePassword(password) {
-		return nil, errors.ErrInvalidCredentials
+		return types.TokenPair{}, errors.ErrInvalidCredentials
 	}
 
-	return user, nil
+	accessToken, err := jwt.GenerateAccessToken(email, string(user.UserRoles), s.appCtx)
+	if err != nil {
+		return types.TokenPair{}, err
+	}
+
+	refreshToken, err := jwt.GenerateRefreshToken(email, string(user.UserRoles), s.appCtx)
+	if err != nil {
+		return types.TokenPair{}, err
+	}
+
+	return types.TokenPair{
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+	}, nil
 }
