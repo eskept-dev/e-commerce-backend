@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"eskept/internal/app/context"
+	"eskept/internal/constants/enums"
 	"eskept/internal/models"
 
 	"github.com/google/uuid"
@@ -20,6 +21,11 @@ type UserRepository struct {
 
 func (r *UserRepository) Create(user *models.User) error {
 	return r.DB.Create(user).Error
+}
+
+func (r *UserRepository) Activate(user *models.User) error {
+	user.Status = enums.UserStatusEnabled
+	return r.DB.Save(user).Error
 }
 
 func (r *UserRepository) IsEmailExists(email string) bool {

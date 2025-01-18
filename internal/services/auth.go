@@ -93,6 +93,5 @@ func (s *AuthService) ActivateUser(activationToken string) error {
 		return err
 	}
 
-	user.Status = enums.UserStatusEnabled
-	return s.repo.Update(user)
+	return s.repo.Activate(user)
 }
