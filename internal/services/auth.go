@@ -7,19 +7,19 @@ import (
 	"eskept/internal/repositories"
 )
 
-type UserService struct {
+type AuthService struct {
 	repo   *repositories.UserRepository
 	appCtx *context.AppContext
 }
 
-func NewUserService(
+func NewAuthService(
 	repo *repositories.UserRepository,
 	appCtx *context.AppContext,
-) *UserService {
-	return &UserService{repo: repo, appCtx: appCtx}
+) *AuthService {
+	return &AuthService{repo: repo, appCtx: appCtx}
 }
 
-func (s *UserService) Register(email, password string) (*models.User, error) {
+func (s *AuthService) Register(email, password string) (*models.User, error) {
 	// Check if user already exists
 	isEmailExists := s.repo.IsEmailExists(email)
 	if isEmailExists {
@@ -38,7 +38,7 @@ func (s *UserService) Register(email, password string) (*models.User, error) {
 	return user, nil
 }
 
-func (s *UserService) Login(email, password string) (*models.User, error) {
+func (s *AuthService) Login(email, password string) (*models.User, error) {
 	// Find user by email
 	user, err := s.repo.FindByEmail(email)
 	if err != nil {

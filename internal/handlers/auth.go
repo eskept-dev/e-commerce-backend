@@ -11,16 +11,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type UserHandler struct {
-	service *services.UserService
+type AuthHandler struct {
+	service *services.AuthService
 	appCtx  *context.AppContext
 }
 
-func NewUserHandler(service *services.UserService, appCtx *context.AppContext) *UserHandler {
-	return &UserHandler{service: service, appCtx: appCtx}
+func NewAuthHandler(service *services.AuthService, appCtx *context.AppContext) *AuthHandler {
+	return &AuthHandler{service: service, appCtx: appCtx}
 }
 
-func (h *UserHandler) Register(c *gin.Context) {
+func (h *AuthHandler) Register(c *gin.Context) {
 	var req schemas.AuthRegisterRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -44,7 +44,7 @@ func (h *UserHandler) Register(c *gin.Context) {
 	c.JSON(http.StatusCreated, user)
 }
 
-func (h *UserHandler) Login(c *gin.Context) {
+func (h *AuthHandler) Login(c *gin.Context) {
 	var req schemas.AuthLoginRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {

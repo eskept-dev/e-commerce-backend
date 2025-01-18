@@ -16,15 +16,15 @@ func SetupV1Routes(group *gin.RouterGroup, ctx *context.AppContext) {
 
 func setupAuthGroup(group *gin.RouterGroup, ctx *context.AppContext) {
 	userRepository := repositories.NewUserRepository(ctx)
-	userService := services.NewUserService(userRepository)
-	userHandler := handlers.NewUserHandler(userService)
+	authService := services.NewAuthService(userRepository, ctx)
+	authHandler := handlers.NewAuthHandler(authService, ctx)
 
 	userGroupApi := group.Group("/auth")
 	{
 		userGroupApi.GET("/test", func(c *gin.Context) {
 			c.JSON(http.StatusOK, gin.H{"message": "OK"})
 		})
-		userGroupApi.POST("/register", userHandler.Register)
-		userGroupApi.POST("/login", userHandler.Login)
+		userGroupApi.POST("/register", authHandler.Register)
+		userGroupApi.POST("/login", authHandler.Login)	
 	}
 }
