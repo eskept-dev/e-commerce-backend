@@ -61,16 +61,16 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		return
 	}
 
-	// _, err := h.service.IsAuthenticated(req.Email, req.Password)
-	// if err != nil {
-	// 	log.Println(err.Error())
-	// 	if err == errors.ErrInvalidCredentials {
-	// 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
-	// 	} else {
-	// 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-	// 	}
-	// 	return
-	// }
+	_, err := h.service.IsAuthenticated(req.Email, req.Password)
+	if err != nil {
+		log.Println(err.Error())
+		if err == errors.ErrInvalidCredentials {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		}
+		return
+	}
 
 	tokenPair, err := h.service.GenerateTokens(req.Email, req.Password)
 	if err != nil {

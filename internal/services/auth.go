@@ -48,6 +48,11 @@ func (s *AuthService) IsAuthenticated(email, password string) (bool, error) {
 		return false, err
 	}
 
+	// Check if user exists
+	if user == nil {
+		return false, errors.ErrUserNotFound
+	}
+
 	// Check password
 	if !user.ComparePassword(password) {
 		return false, errors.ErrInvalidCredentials
