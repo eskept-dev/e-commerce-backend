@@ -6,6 +6,7 @@ var (
 	// Authentication errors
 	ErrInvalidCredentials = errors.New("INVALID_CREDENTIALS")
 	ErrEmailExists        = errors.New("EMAIL_ALREADY_EXISTS")
+	ErrUserNotEnabled     = errors.New("USER_NOT_ENABLED")
 
 	// Database errors
 	ErrUserNotFound = errors.New("USER_NOT_FOUND")

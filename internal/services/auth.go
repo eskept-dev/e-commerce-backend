@@ -2,6 +2,7 @@ package services
 
 import (
 	"eskept/internal/app/context"
+	"eskept/internal/constants/enums"
 	"eskept/internal/constants/errors"
 	"eskept/internal/models"
 	"eskept/internal/repositories"
@@ -40,24 +41,32 @@ func (s *AuthService) Register(email, password string) (*models.User, error) {
 	return user, nil
 }
 
-func (s *AuthService) Login(email, password string) (types.TokenPair, error) {
+func (s *AuthService) IsAuthenticated(email, password string) (bool, error) {
 	// Find user by email
 	user, err := s.repo.FindByEmail(email)
 	if err != nil {
-		return types.TokenPair{}, err
+		return false, err
 	}
 
 	// Check password
 	if !user.ComparePassword(password) {
-		return types.TokenPair{}, errors.ErrInvalidCredentials
+		return false, errors.ErrInvalidCredentials
 	}
 
-	accessToken, err := jwt.GenerateAccessToken(email, string(user.UserRoles), s.appCtx)
+	// Check activation
+	if user.Status != enums.UserStatusEnabled {
+		return false, errors.ErrUserNotEnabled
+	}
+	return true, nil
+}
+
+func (s *AuthService) GenerateTokens(email, role string) (types.TokenPair, error) {
+	accessToken, err := jwt.GenerateAccessToken(email, role, s.appCtx)
 	if err != nil {
 		return types.TokenPair{}, err
 	}
 
-	refreshToken, err := jwt.GenerateRefreshToken(email, string(user.UserRoles), s.appCtx)
+	refreshToken, err := jwt.GenerateRefreshToken(email, role, s.appCtx)
 	if err != nil {
 		return types.TokenPair{}, err
 	}

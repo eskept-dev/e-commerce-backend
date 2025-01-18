@@ -18,7 +18,6 @@ func (r *Router) NewRouter(ctx *context.AppContext) error {
 		c.Set("db", ctx.DB)
 		c.Next()
 	})
-
 	return nil
 }
 

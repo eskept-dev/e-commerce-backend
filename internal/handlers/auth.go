@@ -31,14 +31,11 @@ func (h *AuthHandler) Register(c *gin.Context) {
 
 	user, err := h.service.Register(req.Email, req.Password)
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err.Error())
 		if err == errors.ErrEmailExists {
 			c.JSON(http.StatusConflict, gin.H{"error": err.Error()})
 		} else {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"error":  "could not register user",
-				"detail": err.Error(),
-			})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": errors.ErrInternalServerError.Error()})
 		}
 		return
 	}
@@ -54,15 +51,24 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		return
 	}
 
-	tokenPair, err := h.service.Login(req.Email, req.Password)
+	_, err := h.service.IsAuthenticated(req.Email, req.Password)
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err.Error())
 		if err == errors.ErrInvalidCredentials {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": errors.ErrInvalidCredentials.Error()})
+			c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		} else {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": errors.ErrInternalServerError.Error(),
-			})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		}
+		return
+	}
+
+	tokenPair, err := h.service.GenerateTokens(req.Email, req.Password)
+	if err != nil {
+		log.Println(err)
+		if err == errors.ErrInvalidCredentials {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": errors.ErrInternalServerError.Error()})
 		}
 		return
 	}
