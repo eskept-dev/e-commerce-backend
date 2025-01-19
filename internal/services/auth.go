@@ -8,6 +8,8 @@ import (
 	"eskept/internal/repositories"
 	"eskept/internal/types"
 	jwt "eskept/internal/utils/auth"
+	"log"
+	"time"
 )
 
 type AuthService struct {
@@ -94,4 +96,29 @@ func (s *AuthService) ActivateUserByActivationToken(activationToken string) erro
 	}
 
 	return s.repo.Activate(user)
+}
+
+func (s *AuthService) LoginByAuthenticationToken(authenticationToken string) (types.TokenPair, error) {
+	claims, err := jwt.ValidateToken(authenticationToken, s.appCtx)
+	if err != nil {
+		return types.TokenPair{}, err
+	}
+
+	log.Println("------------------- Login by authentication token -------------------")
+	log.Println("Email:", claims.Email)
+	log.Println("Role:", claims.Role)
+	log.Println("ExpiresAt:", claims.ExpiresAt.Time.Unix())
+	log.Println("Comparison:", time.Now().Unix(), claims.ExpiresAt.Time.Unix() < time.Now().Unix())
+	log.Println("------------------------------------------------------------")
+
+	user, err := s.repo.FindByEmail(claims.Email)
+	if err != nil {
+		return types.TokenPair{}, err
+	}
+
+	if claims.ExpiresAt.Time.Unix() < time.Now().Unix() {
+		return types.TokenPair{}, errors.ErrTokenExpired
+	}
+
+	return s.GenerateTokens(user.Email, string(user.Role))
 }

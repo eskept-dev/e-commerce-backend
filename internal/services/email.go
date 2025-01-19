@@ -7,6 +7,7 @@ import (
 	jwt "eskept/internal/utils/auth"
 	"fmt"
 	"html/template"
+	"log"
 	"net/smtp"
 )
 
@@ -28,7 +29,7 @@ func (s *EmailService) GenerateActivationLink(email, role string) (string, error
 		return "", err
 	}
 
-	activationLink := s.appCtx.Cfg.App.ActivationURL + "?activationToken=" + activationToken
+	activationLink := s.appCtx.Cfg.App.ActivationURL + "?activation_token=" + activationToken
 	return activationLink, nil
 }
 
@@ -37,6 +38,11 @@ func (s *EmailService) SendActivationEmail(email, role string) error {
 	if err != nil {
 		return err
 	}
+	log.Println("------------------- Send activation email -------------------")
+	log.Println("Email:", email)
+	log.Println("Role:", role)
+	log.Println("Activation link:", activationLink)
+	log.Println("------------------------------------------------------------")
 
 	body, err := loadEmailTemplate(
 		s.appCtx.Cfg.Template.EmailActivation,
@@ -49,6 +55,44 @@ func (s *EmailService) SendActivationEmail(email, role string) error {
 	}
 
 	err = s.SendEmail(email, "Activation Link", body)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *EmailService) GenerateAuthenticationLink(email, role string) (string, error) {
+	authenticationToken, err := jwt.GenerateAuthenticationToken(email, role, s.appCtx)
+	if err != nil {
+		return "", err
+	}
+
+	authenticationLink := s.appCtx.Cfg.App.AuthenticationURL + "?authentication_token=" + authenticationToken
+	return authenticationLink, nil
+}
+
+func (s *EmailService) SendAuthenticationEmail(email, role string) error {
+	authenticationLink, err := s.GenerateAuthenticationLink(email, role)
+	if err != nil {
+		return err
+	}
+	log.Println("------------------- Send authentication email -------------------")
+	log.Println("Email:", email)
+	log.Println("Role:", role)
+	log.Println("Authentication link:", authenticationLink)
+	log.Println("------------------------------------------------------------")
+
+	body, err := loadEmailTemplate(
+		s.appCtx.Cfg.Template.EmailAuthentication,
+		map[string]string{
+			"AuthenticationLink": authenticationLink,
+		},
+	)
+	if err != nil {
+		return err
+	}
+
+	err = s.SendEmail(email, "Authentication Token", body)
 	if err != nil {
 		return err
 	}

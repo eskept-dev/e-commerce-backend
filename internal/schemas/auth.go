@@ -44,3 +44,20 @@ type AuthActivateRequest struct {
 type AuthActivateResponse struct {
 	IsActivated bool `json:"is_activated"`
 }
+
+type AuthSendAuthenticationRequest struct {
+	Email string `json:"email" binding:"required"`
+}
+
+type AuthSendAuthenticationResponse struct {
+	IsSuccess bool `json:"is_success"`
+}
+
+type AuthLoginByAuthenticationTokenRequest struct {
+	AuthenticationToken string `json:"authentication_token" binding:"required"`
+}
+
+type AuthLoginByAuthenticationTokenResponse struct {
+	AccessToken  string `json:"access_token"`
+	RefreshToken string `json:"refresh_token"`
+}

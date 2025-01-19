@@ -18,7 +18,8 @@ type Config struct {
 }
 
 type AppConfig struct {
-	ActivationURL string `mapstructure:"activation_url"`
+	ActivationURL     string `mapstructure:"activation_url"`
+	AuthenticationURL string `mapstructure:"authentication_url"`
 }
 
 type ServerConfig struct {
@@ -41,15 +42,17 @@ type CacheConfig struct {
 }
 
 type JWTConfig struct {
-	Secret                        string `mapstructure:"secret"`
-	TokenExpirationTime           int    `mapstructure:"token_expiration_time"`
-	RefreshTokenExpirationTime    int    `mapstructure:"refresh_token_expiration_time"`
-	ActivationTokenExpirationTime int    `mapstructure:"activation_token_expiration_time"`
+	Secret                            string `mapstructure:"secret"`
+	TokenExpirationTime               int    `mapstructure:"token_expiration_time"`
+	RefreshTokenExpirationTime        int    `mapstructure:"refresh_token_expiration_time"`
+	ActivationTokenExpirationTime     int    `mapstructure:"activation_token_expiration_time"`
+	AuthenticationTokenExpirationTime int    `mapstructure:"authentication_token_expiration_time"`
 }
 
 type TemplateConfig struct {
-	EmailActivation    string `mapstructure:"email_activation"`
-	EmailResetPassword string `mapstructure:"email_reset_password"`
+	EmailActivation     string `mapstructure:"email_activation"`
+	EmailResetPassword  string `mapstructure:"email_reset_password"`
+	EmailAuthentication string `mapstructure:"email_authentication"`
 }
 
 type SMTPConfig struct {

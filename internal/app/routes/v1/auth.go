@@ -6,7 +6,6 @@ import (
 	"eskept/internal/middleware"
 	"eskept/internal/repositories"
 	"eskept/internal/services"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -24,11 +23,11 @@ func setupAuthGroup(group *gin.RouterGroup, ctx *context.AppContext) {
 
 	authGroupApi := group.Group("/auth")
 	{
-		authGroupApi.GET("/test", func(c *gin.Context) {
-			c.JSON(http.StatusOK, gin.H{"message": "OK"})
-		})
+
 		authGroupApi.POST("/register", authHandler.Register)
+		authGroupApi.POST("/login-by-authentication-token", authHandler.LoginByAuthenticationToken)
 		authGroupApi.POST("/login", authHandler.Login)
+		authGroupApi.POST("/send-authentication-email", authHandler.SendAuthenticationEmail)
 		authGroupApi.POST("/send-activation-email", authHandler.SendActivationEmail)
 		authGroupApi.POST("/activate", authHandler.Activate)
 	}
