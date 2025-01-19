@@ -3,7 +3,6 @@ package jwt
 import (
 	"eskept/internal/app/context"
 	"eskept/internal/constants/errors"
-	"log"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -84,9 +83,6 @@ func ValidateToken(tokenString string, ctx *context.AppContext) (*Claims, error)
 	if !ok || !token.Valid {
 		return nil, jwt.ErrSignatureInvalid
 	}
-
-	log.Println(claims)
-	log.Println(claims.ExpiresAt.Time.Unix(), time.Now().Unix(), claims.ExpiresAt.Time.Unix() < time.Now().Unix())
 
 	// check if token is expired
 	if claims.ExpiresAt.Time.Unix() < time.Now().Unix() {
