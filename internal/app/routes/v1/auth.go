@@ -3,6 +3,7 @@ package v1
 import (
 	"eskept/internal/app/context"
 	"eskept/internal/handlers"
+	"eskept/internal/middleware"
 	"eskept/internal/repositories"
 	"eskept/internal/services"
 	"net/http"
@@ -12,6 +13,7 @@ import (
 
 func SetupV1Routes(group *gin.RouterGroup, ctx *context.AppContext) {
 	setupAuthGroup(group, ctx)
+	setupUserGroup(group, ctx)
 }
 
 func setupAuthGroup(group *gin.RouterGroup, ctx *context.AppContext) {
@@ -20,14 +22,35 @@ func setupAuthGroup(group *gin.RouterGroup, ctx *context.AppContext) {
 	emailService := services.NewEmailService(userRepository, ctx)
 	authHandler := handlers.NewAuthHandler(userRepository, authService, emailService, ctx)
 
-	userGroupApi := group.Group("/auth")
+	authGroupApi := group.Group("/auth")
 	{
-		userGroupApi.GET("/test", func(c *gin.Context) {
+		authGroupApi.GET("/test", func(c *gin.Context) {
 			c.JSON(http.StatusOK, gin.H{"message": "OK"})
 		})
-		userGroupApi.POST("/register", authHandler.Register)
-		userGroupApi.POST("/login", authHandler.Login)
-		userGroupApi.POST("/send-activation-email", authHandler.SendActivationEmail)
-		userGroupApi.POST("/activate", authHandler.Activate)
+		authGroupApi.POST("/register", authHandler.Register)
+		authGroupApi.POST("/login", authHandler.Login)
+		authGroupApi.POST("/send-activation-email", authHandler.SendActivationEmail)
+		authGroupApi.POST("/activate", authHandler.Activate)
+	}
+
+	protectedGroupApi := group.Group("/auth")
+	{
+		// Apply auth middleware to protected routes
+		protectedGroupApi.Use(middleware.AuthMiddleware(ctx))
+		{
+			protectedGroupApi.GET("/verify-token", authHandler.VerifyToken)
+		}
+	}
+}
+
+func setupUserGroup(group *gin.RouterGroup, ctx *context.AppContext) {
+	userRepository := repositories.NewUserRepository(ctx)
+	userHandler := handlers.NewUserHandler(userRepository, ctx)
+
+	// Apply auth middleware to user routes
+	userGroupApi := group.Group("/users")
+	userGroupApi.Use(middleware.AuthMiddleware(ctx))
+	{
+		userGroupApi.GET("/me", userHandler.GetMe)
 	}
 }

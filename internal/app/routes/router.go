@@ -44,7 +44,6 @@ func (r *Router) SetupRouter(ctx *context.AppContext) {
 		c.JSON(http.StatusOK, gin.H{"message": "OK"})
 	})
 
-	// Setup API versions
 	v1Group := r.routerEngine.Group("/api/v1")
 	{
 		v1.SetupV1Routes(v1Group, ctx)

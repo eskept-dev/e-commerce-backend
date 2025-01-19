@@ -151,3 +151,7 @@ func (h *AuthHandler) Activate(c *gin.Context) {
 		IsActivated: true,
 	})
 }
+
+func (h *AuthHandler) VerifyToken(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"message": "OK"})
+}

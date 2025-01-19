@@ -3,6 +3,7 @@ package jwt
 import (
 	"eskept/internal/app/context"
 	"eskept/internal/constants/errors"
+	"log"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -22,7 +23,7 @@ func GenerateAccessToken(
 	claims := jwt.MapClaims{
 		"email":      email,
 		"role":       role,
-		"expired_at": time.Now().Add(time.Duration(ctx.Cfg.JWT.TokenExpirationTime)).Unix(),
+		"expired_at": jwt.NewNumericDate(time.Now().Add(time.Duration(ctx.Cfg.JWT.TokenExpirationTime) * time.Second)),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString([]byte(ctx.Cfg.JWT.Secret))
@@ -35,7 +36,7 @@ func GenerateRefreshToken(
 	claims := jwt.MapClaims{
 		"email":      email,
 		"role":       role,
-		"expired_at": jwt.NewNumericDate(time.Now().Add(time.Duration(ctx.Cfg.JWT.RefreshTokenExpirationTime))),
+		"expired_at": jwt.NewNumericDate(time.Now().Add(time.Duration(ctx.Cfg.JWT.RefreshTokenExpirationTime) * time.Second)),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString([]byte(ctx.Cfg.JWT.Secret))
@@ -55,6 +56,7 @@ func GenerateActivationToken(
 }
 
 func ValidateToken(tokenString string, ctx *context.AppContext) (*Claims, error) {
+
 	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, jwt.ErrSignatureInvalid
@@ -69,6 +71,9 @@ func ValidateToken(tokenString string, ctx *context.AppContext) (*Claims, error)
 	if !ok || !token.Valid {
 		return nil, jwt.ErrSignatureInvalid
 	}
+
+	log.Println(claims)
+	log.Println(claims.ExpiresAt.Time.Unix(), time.Now().Unix(), claims.ExpiresAt.Time.Unix() < time.Now().Unix())
 
 	// check if token is expired
 	if claims.ExpiresAt.Time.Unix() < time.Now().Unix() {
