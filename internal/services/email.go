@@ -24,7 +24,7 @@ func NewEmailService(
 }
 
 func (s *EmailService) GenerateActivationLink(email, role string) (string, error) {
-	activationToken, err := jwt.GenerateActivationToken(email, role, s.appCtx)
+	activationToken, err := jwt.GenerateToken(email, role, s.appCtx.Cfg.JWT.ActivationTokenExpirationTime, s.appCtx)
 	if err != nil {
 		return "", err
 	}
@@ -62,7 +62,7 @@ func (s *EmailService) SendActivationEmail(email, role string) error {
 }
 
 func (s *EmailService) GenerateAuthenticationLink(email, role string) (string, error) {
-	authenticationToken, err := jwt.GenerateAuthenticationToken(email, role, s.appCtx)
+	authenticationToken, err := jwt.GenerateToken(email, role, s.appCtx.Cfg.JWT.AuthenticationTokenExpirationTime, s.appCtx)
 	if err != nil {
 		return "", err
 	}

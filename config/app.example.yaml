@@ -1,6 +1,7 @@
 app:
-  activation_url: "http://localhost:8000"
-  authentication_url: "http://localhost:8000"
+  activation_url: "http://localhost:5173/auth/register/activate"
+  authentication_url: "http://localhost:5173/auth/sign_in/authenticate-by-email"
+  registration_url: "http://localhost:5173/auth/sign_up"
 
 server:
   port: 8000
@@ -11,6 +12,7 @@ jwt:
   refresh_token_expiration_time: 86400
   activation_token_expiration_time: 86400
   authentication_token_expiration_time: 900
+  registration_token_expiration_time: 900
 
 database:
   host: "localhost"

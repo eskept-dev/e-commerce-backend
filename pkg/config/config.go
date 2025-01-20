@@ -20,6 +20,7 @@ type Config struct {
 type AppConfig struct {
 	ActivationURL     string `mapstructure:"activation_url"`
 	AuthenticationURL string `mapstructure:"authentication_url"`
+	RegistrationURL   string `mapstructure:"registration_url"`
 }
 
 type ServerConfig struct {
@@ -47,12 +48,14 @@ type JWTConfig struct {
 	RefreshTokenExpirationTime        int    `mapstructure:"refresh_token_expiration_time"`
 	ActivationTokenExpirationTime     int    `mapstructure:"activation_token_expiration_time"`
 	AuthenticationTokenExpirationTime int    `mapstructure:"authentication_token_expiration_time"`
+	RegistrationTokenExpirationTime   int    `mapstructure:"registration_token_expiration_time"`
 }
 
 type TemplateConfig struct {
 	EmailActivation     string `mapstructure:"email_activation"`
 	EmailResetPassword  string `mapstructure:"email_reset_password"`
 	EmailAuthentication string `mapstructure:"email_authentication"`
+	EmailRegistration   string `mapstructure:"email_registration"`
 }
 
 type SMTPConfig struct {

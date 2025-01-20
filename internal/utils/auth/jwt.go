@@ -15,59 +15,24 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-func GenerateAccessToken(
+func GenerateToken(
 	email, role string,
+	expirationTime int,
 	ctx *context.AppContext,
 ) (string, error) {
 	claims := jwt.MapClaims{
 		"email":      email,
 		"role":       role,
-		"expired_at": jwt.NewNumericDate(time.Now().Add(time.Duration(ctx.Cfg.JWT.TokenExpirationTime) * time.Second)),
+		"expired_at": jwt.NewNumericDate(time.Now().Add(time.Duration(expirationTime) * time.Second)),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString([]byte(ctx.Cfg.JWT.Secret))
 }
 
-func GenerateRefreshToken(
-	email, role string,
+func ValidateToken(
+	tokenString string,
 	ctx *context.AppContext,
-) (string, error) {
-	claims := jwt.MapClaims{
-		"email":      email,
-		"role":       role,
-		"expired_at": jwt.NewNumericDate(time.Now().Add(time.Duration(ctx.Cfg.JWT.RefreshTokenExpirationTime) * time.Second)),
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString([]byte(ctx.Cfg.JWT.Secret))
-}
-
-func GenerateActivationToken(
-	email, role string,
-	ctx *context.AppContext,
-) (string, error) {
-	claims := jwt.MapClaims{
-		"email":      email,
-		"role":       role,
-		"expired_at": jwt.NewNumericDate(time.Now().Add(time.Duration(ctx.Cfg.JWT.ActivationTokenExpirationTime) * time.Second)),
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString([]byte(ctx.Cfg.JWT.Secret))
-}
-
-func GenerateAuthenticationToken(
-	email, role string,
-	ctx *context.AppContext,
-) (string, error) {
-	claims := jwt.MapClaims{
-		"email":      email,
-		"role":       role,
-		"expired_at": jwt.NewNumericDate(time.Now().Add(time.Duration(ctx.Cfg.JWT.AuthenticationTokenExpirationTime) * time.Second)),
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString([]byte(ctx.Cfg.JWT.Secret))
-}
-
-func ValidateToken(tokenString string, ctx *context.AppContext) (*Claims, error) {
+) (*Claims, error) {
 
 	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {

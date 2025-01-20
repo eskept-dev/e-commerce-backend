@@ -68,12 +68,12 @@ func (s *AuthService) IsAuthenticated(email, password string) (bool, error) {
 }
 
 func (s *AuthService) GenerateTokens(email, role string) (types.TokenPair, error) {
-	accessToken, err := jwt.GenerateAccessToken(email, role, s.appCtx)
+	accessToken, err := jwt.GenerateToken(email, role, s.appCtx.Cfg.JWT.TokenExpirationTime, s.appCtx)
 	if err != nil {
 		return types.TokenPair{}, err
 	}
 
-	refreshToken, err := jwt.GenerateRefreshToken(email, role, s.appCtx)
+	refreshToken, err := jwt.GenerateToken(email, role, s.appCtx.Cfg.JWT.RefreshTokenExpirationTime, s.appCtx)
 	if err != nil {
 		return types.TokenPair{}, err
 	}
