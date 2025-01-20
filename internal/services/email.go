@@ -23,18 +23,26 @@ func NewEmailService(
 	return &EmailService{repo: repo, appCtx: appCtx}
 }
 
-func (s *EmailService) GenerateActivationLink(email, role string) (string, error) {
-	activationToken, err := jwt.GenerateToken(email, role, s.appCtx.Cfg.JWT.ActivationTokenExpirationTime, s.appCtx)
+func (s *EmailService) GenerateAuthorizationLink(
+	email, role, rootURL string,
+	expirationTime int,
+) (string, error) {
+	authorizationToken, err := jwt.GenerateToken(email, role, expirationTime, s.appCtx)
 	if err != nil {
 		return "", err
 	}
 
-	activationLink := s.appCtx.Cfg.App.ActivationURL + "?activation_token=" + activationToken
-	return activationLink, nil
+	authorizationLink := rootURL + "?token=" + authorizationToken
+	return authorizationLink, nil
 }
 
 func (s *EmailService) SendActivationEmail(email, role string) error {
-	activationLink, err := s.GenerateActivationLink(email, role)
+	activationLink, err := s.GenerateAuthorizationLink(
+		email,
+		role,
+		s.appCtx.Cfg.App.ActivationURL,
+		s.appCtx.Cfg.JWT.ActivationTokenExpirationTime,
+	)
 	if err != nil {
 		return err
 	}
@@ -61,18 +69,13 @@ func (s *EmailService) SendActivationEmail(email, role string) error {
 	return nil
 }
 
-func (s *EmailService) GenerateAuthenticationLink(email, role string) (string, error) {
-	authenticationToken, err := jwt.GenerateToken(email, role, s.appCtx.Cfg.JWT.AuthenticationTokenExpirationTime, s.appCtx)
-	if err != nil {
-		return "", err
-	}
-
-	authenticationLink := s.appCtx.Cfg.App.AuthenticationURL + "?authentication_token=" + authenticationToken
-	return authenticationLink, nil
-}
-
 func (s *EmailService) SendAuthenticationEmail(email, role string) error {
-	authenticationLink, err := s.GenerateAuthenticationLink(email, role)
+	authenticationLink, err := s.GenerateAuthorizationLink(
+		email,
+		role,
+		s.appCtx.Cfg.App.AuthenticationURL,
+		s.appCtx.Cfg.JWT.AuthenticationTokenExpirationTime,
+	)
 	if err != nil {
 		return err
 	}
