@@ -46,6 +46,7 @@ func (s *EmailService) SendActivationEmail(email, role string) error {
 	if err != nil {
 		return err
 	}
+
 	log.Println("------------------- Send activation email -------------------")
 	log.Println("Email:", email)
 	log.Println("Role:", role)
@@ -96,6 +97,38 @@ func (s *EmailService) SendAuthenticationEmail(email, role string) error {
 	}
 
 	err = s.SendEmail(email, "Eskept Authentication", body)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *EmailService) SendVerificationEmail(email string) error {
+	verificationLink, err := s.GenerateAuthorizationLink(
+		email,
+		"",
+		s.appCtx.Cfg.App.RegistrationURL,
+		s.appCtx.Cfg.JWT.RegistrationTokenExpirationTime,
+	)
+	if err != nil {
+		return err
+	}
+	log.Println("------------------- Send verification email -------------------")
+	log.Println("Email:", email)
+	log.Println("Verification link:", verificationLink)
+	log.Println("------------------------------------------------------------")
+
+	body, err := loadEmailTemplate(
+		s.appCtx.Cfg.Template.EmailRegistration,
+		map[string]string{
+			"VerificationLink": verificationLink,
+		},
+	)
+	if err != nil {
+		return err
+	}
+
+	err = s.SendEmail(email, "Eskept Registration", body)
 	if err != nil {
 		return err
 	}

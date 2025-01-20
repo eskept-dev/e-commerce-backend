@@ -36,3 +36,4 @@ template:
   email_activation: "templates/email/activation.html"
   email_authentication: "templates/email/authentication.html"
   email_reset_password: "templates/email/reset_password.html"
+  email_registration: "templates/email/registration.html"

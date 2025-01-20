@@ -29,6 +29,7 @@ func setupAuthGroup(group *gin.RouterGroup, ctx *context.AppContext) {
 		authGroupApi.POST("/login", authHandler.Login)
 		authGroupApi.POST("/send-authentication-email", authHandler.SendAuthenticationEmail)
 		authGroupApi.POST("/send-activation-email", authHandler.SendActivationEmail)
+		authGroupApi.POST("/send-verification-email", authHandler.SendVerificationEmail)
 		authGroupApi.POST("/activate", authHandler.Activate)
 	}
 

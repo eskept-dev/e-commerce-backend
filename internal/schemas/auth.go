@@ -61,3 +61,11 @@ type AuthLoginByAuthenticationTokenResponse struct {
 	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
 }
+
+type AuthSendVerificationEmailRequest struct {
+	Email string `json:"email" binding:"required"`
+}
+
+type AuthSendVerificationEmailResponse struct {
+	IsSuccess bool `json:"is_success"`
+}

@@ -189,6 +189,36 @@ func (h *AuthHandler) SendActivationEmail(c *gin.Context) {
 	})
 }
 
+func (h *AuthHandler) SendVerificationEmail(c *gin.Context) {
+	var req schemas.AuthSendVerificationEmailRequest
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	user, _ := h.repo.FindByEmail(req.Email)
+	if user != nil {
+		c.JSON(http.StatusConflict, gin.H{"error": errors.ErrEmailExists.Error()})
+		return
+	}
+
+	err := h.emailService.SendVerificationEmail(req.Email)
+	if err != nil {
+		log.Println(err)
+		if err == errors.ErrInvalidCredentials {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": errors.ErrInternalServerError.Error()})
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, schemas.AuthSendVerificationEmailResponse{
+		IsSuccess: true,
+	})
+}
+
 func (h *AuthHandler) Activate(c *gin.Context) {
 	var req schemas.AuthActivateRequest
 
