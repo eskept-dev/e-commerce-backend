@@ -62,7 +62,7 @@ func (s *EmailService) SendActivationEmail(email, role string) error {
 		return err
 	}
 
-	err = s.SendEmail(email, "Activation Link", body)
+	err = s.SendEmail(email, "Eskept Account Activation", body)
 	if err != nil {
 		return err
 	}
@@ -95,7 +95,7 @@ func (s *EmailService) SendAuthenticationEmail(email, role string) error {
 		return err
 	}
 
-	err = s.SendEmail(email, "Authentication Token", body)
+	err = s.SendEmail(email, "Eskept Authentication", body)
 	if err != nil {
 		return err
 	}
