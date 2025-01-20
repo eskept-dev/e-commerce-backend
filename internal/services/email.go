@@ -113,6 +113,10 @@ func (s *EmailService) SendVerificationEmail(email string) error {
 	if err != nil {
 		return err
 	}
+
+	// Add data to the verification link
+	verificationLink = fmt.Sprintf("%s&email=%s", verificationLink, email)
+
 	log.Println("------------------- Send verification email -------------------")
 	log.Println("Email:", email)
 	log.Println("Verification link:", verificationLink)

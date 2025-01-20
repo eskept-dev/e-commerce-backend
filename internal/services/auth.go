@@ -122,3 +122,8 @@ func (s *AuthService) LoginByAuthenticationToken(authenticationToken string) (ty
 
 	return s.GenerateTokens(user.Email, string(user.Role))
 }
+
+func (s *AuthService) VerifyEmailToken(token string) error {
+	_, err := jwt.ValidateToken(token, s.appCtx)
+	return err
+}

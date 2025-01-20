@@ -219,6 +219,31 @@ func (h *AuthHandler) SendVerificationEmail(c *gin.Context) {
 	})
 }
 
+func (h *AuthHandler) VerifyEmailToken(c *gin.Context) {
+	var req schemas.AuthVerifyEmailTokenRequest
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	err := h.service.VerifyEmailToken(req.Token)
+	if err != nil {
+		log.Println(err)
+		switch err {
+		case errors.ErrTokenExpired, errors.ErrInvalidToken:
+			c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		default:
+			c.JSON(http.StatusInternalServerError, gin.H{"error": errors.ErrInternalServerError.Error()})
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, schemas.AuthVerifyEmailTokenResponse{
+		IsVerified: true,
+	})
+}
+
 func (h *AuthHandler) Activate(c *gin.Context) {
 	var req schemas.AuthActivateRequest
 

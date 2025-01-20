@@ -69,3 +69,11 @@ type AuthSendVerificationEmailRequest struct {
 type AuthSendVerificationEmailResponse struct {
 	IsSuccess bool `json:"is_success"`
 }
+
+type AuthVerifyEmailTokenRequest struct {
+	Token string `json:"token" binding:"required"`
+}
+
+type AuthVerifyEmailTokenResponse struct {
+	IsVerified bool `json:"is_verified"`
+}
