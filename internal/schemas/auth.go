@@ -38,7 +38,7 @@ type AuthSendActivationResponse struct {
 }
 
 type AuthActivateRequest struct {
-	ActivationToken string `json:"activationToken" binding:"required"`
+	Token string `json:"token" binding:"required"`
 }
 
 type AuthActivateResponse struct {
@@ -54,7 +54,7 @@ type AuthSendAuthenticationResponse struct {
 }
 
 type AuthLoginByAuthenticationTokenRequest struct {
-	AuthenticationToken string `json:"authentication_token" binding:"required"`
+	Token string `json:"token" binding:"required"`
 }
 
 type AuthLoginByAuthenticationTokenResponse struct {

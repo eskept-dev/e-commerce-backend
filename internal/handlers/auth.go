@@ -100,7 +100,7 @@ func (h *AuthHandler) LoginByAuthenticationToken(c *gin.Context) {
 		return
 	}
 
-	tokenPair, err := h.service.LoginByAuthenticationToken(req.AuthenticationToken)
+	tokenPair, err := h.service.LoginByAuthenticationToken(req.Token)
 	if err != nil {
 		log.Println(err)
 		if err == errors.ErrInvalidCredentials {
@@ -197,7 +197,7 @@ func (h *AuthHandler) Activate(c *gin.Context) {
 		return
 	}
 
-	err := h.service.ActivateUserByActivationToken(req.ActivationToken)
+	err := h.service.ActivateUserByActivationToken(req.Token)
 	if err != nil {
 		log.Println(err)
 		switch err {
