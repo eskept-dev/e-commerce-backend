@@ -46,12 +46,19 @@ func setupAuthGroup(group *gin.RouterGroup, ctx *context.AppContext) {
 
 func setupUserGroup(group *gin.RouterGroup, ctx *context.AppContext) {
 	userRepository := repositories.NewUserRepository(ctx)
-	userHandler := handlers.NewUserHandler(userRepository, ctx)
+	userProfileRepository := repositories.NewUserProfileRepository(ctx)
+	userHandler := handlers.NewUserHandler(userRepository, userProfileRepository, ctx)
 
 	// Apply auth middleware to user routes
 	userGroupApi := group.Group("/users")
 	userGroupApi.Use(middleware.AuthMiddleware(ctx))
 	{
 		userGroupApi.GET("/me", userHandler.GetMe)
+	}
+
+	userProfileGroupApi := userGroupApi.Group("/profile")
+	userProfileGroupApi.Use(middleware.AuthMiddleware(ctx))
+	{
+		userProfileGroupApi.POST("/", userHandler.CreateUserProfile)
 	}
 }

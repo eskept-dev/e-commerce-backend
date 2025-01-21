@@ -13,11 +13,16 @@ var (
 	ErrTokenExpired = errors.New("TOKEN_EXPIRED")
 
 	// Database errors
-	ErrUserNotFound = errors.New("USER_NOT_FOUND")
+	ErrUserNotFound        = errors.New("USER_NOT_FOUND")
+	ErrUserProfileNotFound = errors.New("USER_PROFILE_NOT_FOUND")
 
 	// Common errors
 	ErrInternalServerError = errors.New("INTERNAL_SERVER_ERROR")
+	ErrAlreadyExists       = errors.New("ALREADY_EXISTS")
 
 	// Validation errors
 	ErrInvalidRequest = errors.New("INVALID_REQUEST")
+
+	// User Profile errors
+	ErrInvalidProfile = errors.New("INVALID_PROFILE")
 )
