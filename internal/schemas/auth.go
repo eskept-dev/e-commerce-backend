@@ -1,20 +1,23 @@
 package schemas
 
 import (
+	"eskept/internal/constants/enums"
 	"time"
 
 	"github.com/google/uuid"
 )
 
 type AuthRegisterRequest struct {
-	Email    string `json:"email" binding:"required"`
-	Password string `json:"password" binding:"required"`
+	Email    string          `json:"email" binding:"required"`
+	Password string          `json:"password" binding:"required"`
+	Role     enums.UserRoles `json:"role" binding:"required"`
 }
 
 type AuthRegisterResponse struct {
 	ID        uuid.UUID `json:"id"`
 	Email     string    `json:"email"`
 	Password  string    `json:"password"`
+	Role      string    `json:"role"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }

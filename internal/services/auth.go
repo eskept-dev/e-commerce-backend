@@ -24,17 +24,21 @@ func NewAuthService(
 	return &AuthService{repo: repo, appCtx: appCtx}
 }
 
-func (s *AuthService) Register(email, password string) (*models.User, error) {
-	// Check if user already exists
+func (s *AuthService) Register(
+	email, password string,
+	role enums.UserRoles,
+	status enums.UserStatus,
+) (*models.User, error) {
 	isEmailExists := s.repo.IsEmailExists(email)
 	if isEmailExists {
 		return nil, errors.ErrEmailExists
 	}
 
-	// Create new user
 	user := &models.User{
 		Email:    email,
 		Password: password,
+		Role:     role,
+		Status:   status,
 	}
 	err := s.repo.Create(user)
 	if err != nil {

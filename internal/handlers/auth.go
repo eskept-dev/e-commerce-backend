@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"eskept/internal/constants/enums"
 	"eskept/internal/constants/errors"
 	"eskept/internal/repositories"
 	"eskept/internal/schemas"
@@ -42,7 +43,7 @@ func (h *AuthHandler) Register(c *gin.Context) {
 		return
 	}
 
-	user, err := h.service.Register(req.Email, req.Password)
+	user, err := h.service.Register(req.Email, req.Password, req.Role, enums.UserStatusEnabled)
 	if err != nil {
 		log.Println(err.Error())
 		if err == errors.ErrEmailExists {
