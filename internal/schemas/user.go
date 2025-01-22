@@ -7,11 +7,11 @@ import (
 )
 
 type UserGetMeResponse struct {
-	ID        uuid.UUID `json:"id"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-	DeletedAt int64     `json:"deleted_at"`
-	Status    string    `json:"status"`
-	Email     string    `json:"email"`
-	Role      string    `json:"role"`
+	ID        uuid.UUID  `json:"id"`
+	CreatedAt time.Time  `json:"createdAt"`
+	UpdatedAt time.Time  `json:"updatedAt"`
+	DeletedAt *time.Time `json:"deletedAt"`
+	Status    string     `json:"status"`
+	Email     string     `json:"email"`
+	Role      string     `json:"role"`
 }

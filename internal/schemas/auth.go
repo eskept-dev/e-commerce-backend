@@ -17,13 +17,13 @@ type AuthRegisterResponse struct {
 	ID        uuid.UUID `json:"id"`
 	Email     string    `json:"email"`
 	Role      string    `json:"role"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }
 
 type AuthLoginResponse struct {
-	AccessToken  string `json:"access_token"`
-	RefreshToken string `json:"refresh_token"`
+	AccessToken  string `json:"accessToken"`
+	RefreshToken string `json:"refreshToken"`
 }
 
 type AuthLoginRequest struct {
@@ -36,7 +36,7 @@ type AuthSendActivationRequest struct {
 }
 
 type AuthSendActivationResponse struct {
-	IsSuccess bool `json:"is_success"`
+	IsSuccess bool `json:"isSuccess"`
 }
 
 type AuthActivateRequest struct {
@@ -44,7 +44,7 @@ type AuthActivateRequest struct {
 }
 
 type AuthActivateResponse struct {
-	IsActivated bool `json:"is_activated"`
+	IsActivated bool `json:"isActivated"`
 }
 
 type AuthSendAuthenticationRequest struct {
@@ -52,7 +52,7 @@ type AuthSendAuthenticationRequest struct {
 }
 
 type AuthSendAuthenticationResponse struct {
-	IsSuccess bool `json:"is_success"`
+	IsSuccess bool `json:"isSuccess"`
 }
 
 type AuthLoginByAuthenticationTokenRequest struct {
@@ -60,8 +60,8 @@ type AuthLoginByAuthenticationTokenRequest struct {
 }
 
 type AuthLoginByAuthenticationTokenResponse struct {
-	AccessToken  string `json:"access_token"`
-	RefreshToken string `json:"refresh_token"`
+	AccessToken  string `json:"accessToken"`
+	RefreshToken string `json:"refreshToken"`
 }
 
 type AuthSendVerificationEmailRequest struct {
@@ -69,7 +69,7 @@ type AuthSendVerificationEmailRequest struct {
 }
 
 type AuthSendVerificationEmailResponse struct {
-	IsSuccess bool `json:"is_success"`
+	IsSuccess bool `json:"isSuccess"`
 }
 
 type AuthVerifyEmailTokenRequest struct {
@@ -77,5 +77,5 @@ type AuthVerifyEmailTokenRequest struct {
 }
 
 type AuthVerifyEmailTokenResponse struct {
-	IsVerified bool `json:"is_verified"`
+	IsVerified bool `json:"isVerified"`
 }

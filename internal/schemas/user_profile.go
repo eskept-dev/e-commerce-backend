@@ -7,26 +7,51 @@ import (
 )
 
 type UserProfileCreateRequest struct {
-	FirstName   string     `json:"first_name"`
-	LastName    string     `json:"last_name"`
-	DateOfBirth *time.Time `json:"date_of_birth"`
+	FirstName   string     `json:"firstName" binding:"required"`
+	LastName    string     `json:"lastName" binding:"required"`
+	DateOfBirth *time.Time `json:"dateOfBirth"`
 	Sex         string     `json:"sex"`
 	Nationality string     `json:"nationality"`
-	DialCode    string     `json:"dial_code"`
-	PhoneNumber string     `json:"phone_number"`
+	DialCode    string     `json:"dialCode"`
+	PhoneNumber string     `json:"phoneNumber"`
 }
 
 type UserProfileCreateResponse struct {
 	ID          uuid.UUID  `json:"id"`
-	CreatedAt   time.Time  `json:"created_at"`
-	UpdatedAt   time.Time  `json:"updated_at"`
-	UserId      uuid.UUID  `json:"user_id"`
-	FirstName   string     `json:"first_name"`
-	LastName    string     `json:"last_name"`
-	DateOfBirth *time.Time `json:"date_of_birth"`
+	CreatedAt   time.Time  `json:"createdAt"`
+	UpdatedAt   time.Time  `json:"updatedAt"`
+	UserId      uuid.UUID  `json:"userId"`
+	FirstName   string     `json:"firstName"`
+	LastName    string     `json:"lastName"`
+	DateOfBirth *time.Time `json:"dateOfBirth"`
 	Sex         string     `json:"sex"`
 	Nationality string     `json:"nationality"`
-	DialCode    string     `json:"dial_code"`
-	PhoneNumber string     `json:"phone_number"`
+	DialCode    string     `json:"dialCode"`
+	PhoneNumber string     `json:"phoneNumber"`
+	Email       string     `json:"email"`
+}
+
+type UserProfileUpdateRequest struct {
+	FirstName   string     `json:"firstName"`
+	LastName    string     `json:"lastName"`
+	DateOfBirth *time.Time `json:"dateOfBirth"`
+	Sex         string     `json:"sex"`
+	Nationality string     `json:"nationality"`
+	DialCode    string     `json:"dialCode"`
+	PhoneNumber string     `json:"phoneNumber"`
+}
+
+type UserProfileResponse struct {
+	ID          uuid.UUID  `json:"id"`
+	CreatedAt   time.Time  `json:"createdAt"`
+	UpdatedAt   time.Time  `json:"updatedAt"`
+	UserId      uuid.UUID  `json:"userId"`
+	FirstName   string     `json:"firstName"`
+	LastName    string     `json:"lastName"`
+	DateOfBirth *time.Time `json:"dateOfBirth"`
+	Sex         string     `json:"sex"`
+	Nationality string     `json:"nationality"`
+	DialCode    string     `json:"dialCode"`
+	PhoneNumber string     `json:"phoneNumber"`
 	Email       string     `json:"email"`
 }

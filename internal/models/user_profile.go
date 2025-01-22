@@ -11,15 +11,15 @@ type UserProfile struct {
 
 	User User `gorm:"foreignKey:UserId" json:"-"`
 
-	FirstName   string     `gorm:"type:varchar(255)" json:"first_name"`
-	LastName    string     `gorm:"type:varchar(255)" json:"last_name"`
-	DateOfBirth *time.Time `gorm:"type:timestamptz" json:"date_of_birth"`
+	FirstName   string     `gorm:"type:varchar(255)" json:"firstName"`
+	LastName    string     `gorm:"type:varchar(255)" json:"lastName"`
+	DateOfBirth *time.Time `gorm:"type:timestamptz" json:"dateOfBirth"`
 	Sex         string     `gorm:"type:varchar(255)" json:"sex"`
 	Nationality string     `gorm:"type:varchar(255)" json:"nationality"`
-	DialCode    string     `gorm:"type:varchar(255)" json:"dial_code"`
-	PhoneNumber string     `gorm:"type:varchar(255)" json:"phone_number"`
+	DialCode    string     `gorm:"type:varchar(255)" json:"dialCode"`
+	PhoneNumber string     `gorm:"type:varchar(255)" json:"phoneNumber"`
 	Email       string     `gorm:"type:varchar(255)" json:"email"`
-	UserId      uuid.UUID  `gorm:"type:uuid;not null" json:"user_id"`
+	UserId      uuid.UUID  `gorm:"type:uuid;not null" json:"userId"`
 }
 
 func (UserProfile) TableName() string {

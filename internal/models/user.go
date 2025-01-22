@@ -4,7 +4,9 @@ import (
 	"eskept/internal/constants/enums"
 	"log"
 	"strings"
+	"time"
 
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
@@ -14,12 +16,14 @@ const (
 )
 
 type User struct {
-	BaseModel
-	DeletedAt int64            `json:"deleted_at"`
+	ID        uuid.UUID  `gorm:"type:uuid;primary_key;default:uuid_generate_v4()" json:"id"`
+	CreatedAt time.Time  `json:"createdAt"`
+	UpdatedAt time.Time  `json:"updatedAt"`
+	DeletedAt *time.Time `json:"deletedAt,omitempty"`
 	Status    enums.UserStatus `json:"status" gorm:"default:pending_activation"`
 	Role      enums.UserRoles  `json:"role" gorm:"default:user_guest"`
-	Email     string           `json:"email"`
-	Password  string           `json:"password"`
+	Email     string           `json:"email" gorm:"uniqueIndex"`
+	Password  string           `json:"-"` // Hide password from JSON responses
 }
 
 func (u *User) TableName() string {
@@ -43,12 +47,10 @@ func (u *User) BeforeUpdate(tx *gorm.DB) error {
 }
 
 func (u *User) ComparePassword(password string) bool {
-	log.Println(u.Password, u.HashPassword(password), bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(u.HashPassword(password))))
 	return bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password)) == nil
 }
 
 func (u *User) HashPassword(password string) string {
-	log.Println(password)
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		log.Println(err)
