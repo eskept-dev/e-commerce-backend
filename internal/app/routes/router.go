@@ -14,14 +14,46 @@ type Router struct {
 }
 
 func (r *Router) NewRouter(ctx *context.AppContext) error {
-	r.routerEngine = gin.Default()
+	gin.SetMode(gin.ReleaseMode)
+	r.routerEngine = gin.New()
+	
+	// Disable automatic trailing slash redirects
+	r.routerEngine.RedirectTrailingSlash = false
+	r.routerEngine.RedirectFixedPath = false
+
+	// Add recovery middleware
+	r.routerEngine.Use(gin.Recovery())
 
 	// Configure CORS
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"http://localhost:5173"} // Add your frontend URL here
-	config.AllowMethods = []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"}
-	config.AllowHeaders = []string{"Origin", "Content-Type", "Accept", "Authorization"}
+	config.AllowOrigins = []string{
+		"http://localhost:5173",
+		"http://localhost:3000",
+		"http://127.0.0.1:5173",
+		"http://127.0.0.1:3000",
+	}
+	config.AllowMethods = []string{
+		"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS",
+	}
+	config.AllowHeaders = []string{
+		"Origin",
+		"Content-Length",
+		"Content-Type",
+		"Accept",
+		"Authorization",
+		"X-Requested-With",
+		"Access-Control-Allow-Origin",
+		"Access-Control-Allow-Headers",
+		"Access-Control-Allow-Methods",
+	}
+	config.ExposeHeaders = []string{
+		"Content-Length",
+		"Access-Control-Allow-Origin",
+		"Access-Control-Allow-Headers",
+		"Access-Control-Allow-Methods",
+	}
 	config.AllowCredentials = true
+	config.MaxAge = 12 * 60 * 60 // 12 hours
 
 	r.routerEngine.Use(cors.New(config))
 
