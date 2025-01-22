@@ -63,17 +63,7 @@ func (h *UserHandler) CreateUserProfile(c *gin.Context) {
 		return
 	}
 
-	email := c.MustGet("email").(string)
-	user, err := h.userRepo.FindByEmail(email)
-	if err != nil {
-		log.Println(err)
-		if err == errors.ErrNotFound {
-			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-		} else {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": errors.ErrInternalServerError.Error()})
-		}
-		return
-	}
+	user := c.MustGet("user").(*models.User)
 
 	isExists, _ := h.userProfileRepo.FindByUserId(user.ID)
 	if isExists != nil {
@@ -90,10 +80,10 @@ func (h *UserHandler) CreateUserProfile(c *gin.Context) {
 		Nationality: req.Nationality,
 		DialCode:    req.DialCode,
 		PhoneNumber: req.PhoneNumber,
-		Email:       email,
+		Email:       user.Email,
 	}
 
-	err = h.userProfileRepo.Create(profile)
+	err := h.userProfileRepo.Create(profile)
 	if err != nil {
 		log.Println(err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": errors.ErrInternalServerError.Error()})

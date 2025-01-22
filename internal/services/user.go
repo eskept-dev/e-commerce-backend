@@ -4,6 +4,8 @@ import (
 	"eskept/internal/app/context"
 	"eskept/internal/models"
 	"eskept/internal/repositories"
+
+	"github.com/google/uuid"
 )
 
 type UserService struct {
@@ -22,4 +24,8 @@ func NewUserService(
 
 func (s *UserService) CreateProfile(profile *models.UserProfile) error {
 	return s.profileRepo.Create(profile)
+}
+
+func (s *UserService) GetProfileByUserId(userId uuid.UUID) (*models.UserProfile, error) {
+	return s.profileRepo.FindByUserId(userId)
 }

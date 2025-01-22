@@ -11,6 +11,7 @@ var (
 	// Authorization errors
 	ErrInvalidToken = errors.New("INVALID_TOKEN")
 	ErrTokenExpired = errors.New("TOKEN_EXPIRED")
+	ErrUnauthorized = errors.New("UNAUTHORIZED")
 
 	// Database errors
 	ErrNotFound = errors.New("NOT_FOUND")

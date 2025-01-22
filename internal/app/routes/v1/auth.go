@@ -10,12 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func SetupV1Routes(group *gin.RouterGroup, ctx *context.AppContext) {
-	setupAuthGroup(group, ctx)
-	setupUserGroup(group, ctx)
-	setupProfileGroup(group, ctx)
-}
-
 func setupAuthGroup(group *gin.RouterGroup, ctx *context.AppContext) {
 	userRepository := repositories.NewUserRepository(ctx)
 	authService := services.NewAuthService(userRepository, ctx)
@@ -42,31 +36,5 @@ func setupAuthGroup(group *gin.RouterGroup, ctx *context.AppContext) {
 		{
 			protectedGroupApi.GET("/verify-token", authHandler.VerifyToken)
 		}
-	}
-}
-
-func setupUserGroup(group *gin.RouterGroup, ctx *context.AppContext) {
-	userRepository := repositories.NewUserRepository(ctx)
-	userProfileRepository := repositories.NewUserProfileRepository(ctx)
-	userHandler := handlers.NewUserHandler(userRepository, userProfileRepository, ctx)
-
-	// Apply auth middleware to user routes
-	userGroupApi := group.Group("/users")
-	{
-		userGroupApi.Use(middleware.AuthMiddleware(userRepository, ctx))
-		userGroupApi.GET("/me", userHandler.GetMe)
-	}
-}
-
-func setupProfileGroup(group *gin.RouterGroup, ctx *context.AppContext) {
-	userRepository := repositories.NewUserRepository(ctx)
-	userProfileRepository := repositories.NewUserProfileRepository(ctx)
-	userHandler := handlers.NewUserHandler(userRepository, userProfileRepository, ctx)
-
-	// Apply auth middleware to user routes
-	userProfileGroupApi := group.Group("/profiles")
-	{
-		userProfileGroupApi.Use(middleware.AuthMiddleware(userRepository, ctx))
-		userProfileGroupApi.POST("", userHandler.CreateUserProfile)
 	}
 }
