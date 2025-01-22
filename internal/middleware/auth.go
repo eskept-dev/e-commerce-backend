@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"eskept/internal/app/context"
+	"eskept/internal/repositories"
 	jwt "eskept/internal/utils/auth"
 	"strings"
 
@@ -9,7 +10,7 @@ import (
 )
 
 // AuthMiddleware extracts email and role from JWT token and sets them in the 	context
-func AuthMiddleware(appCtx *context.AppContext) gin.HandlerFunc {
+func AuthMiddleware(userRepository *repositories.UserRepository, appCtx *context.AppContext) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" {
@@ -35,6 +36,13 @@ func AuthMiddleware(appCtx *context.AppContext) gin.HandlerFunc {
 		// Set email and role in the context for use in handlers
 		c.Set("email", claims.Email)
 		c.Set("role", claims.Role)
+
+		user, err := userRepository.FindByEmail(claims.Email)
+		if err != nil {
+			c.AbortWithStatusJSON(401, gin.H{"error": "User not found"})
+			return
+		}
+		c.Set("user", user)
 
 		c.Next()
 	}
