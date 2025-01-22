@@ -36,7 +36,7 @@ func (h *UserHandler) GetMe(c *gin.Context) {
 	user, err := h.userRepo.FindByEmail(email)
 	if err != nil {
 		log.Println(err)
-		if err == errors.ErrUserNotFound {
+		if err == errors.ErrNotFound {
 			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		} else {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": errors.ErrInternalServerError.Error()})
@@ -67,7 +67,7 @@ func (h *UserHandler) CreateUserProfile(c *gin.Context) {
 	user, err := h.userRepo.FindByEmail(email)
 	if err != nil {
 		log.Println(err)
-		if err == errors.ErrUserNotFound {
+		if err == errors.ErrNotFound {
 			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		} else {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": errors.ErrInternalServerError.Error()})

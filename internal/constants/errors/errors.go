@@ -13,8 +13,7 @@ var (
 	ErrTokenExpired = errors.New("TOKEN_EXPIRED")
 
 	// Database errors
-	ErrUserNotFound        = errors.New("USER_NOT_FOUND")
-	ErrUserProfileNotFound = errors.New("USER_PROFILE_NOT_FOUND")
+	ErrNotFound = errors.New("NOT_FOUND")
 
 	// Common errors
 	ErrInternalServerError = errors.New("INTERNAL_SERVER_ERROR")

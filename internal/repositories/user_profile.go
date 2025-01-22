@@ -26,7 +26,7 @@ func (r *UserProfileRepository) FindByUserId(userId uuid.UUID) (*models.UserProf
 	err := r.db.Where("user_id = ?", userId).First(&profile).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
-			return nil, errors.ErrUserProfileNotFound
+			return nil, errors.ErrNotFound
 		}
 		return nil, err
 	}

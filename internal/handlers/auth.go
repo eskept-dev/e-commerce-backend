@@ -131,7 +131,7 @@ func (h *AuthHandler) SendAuthenticationEmail(c *gin.Context) {
 	user, err := h.repo.FindByEmail(req.Email)
 	if err != nil {
 		log.Println(err)
-		if err == errors.ErrUserNotFound {
+		if err == errors.ErrNotFound {
 			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		} else {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": errors.ErrInternalServerError.Error()})
@@ -166,7 +166,7 @@ func (h *AuthHandler) SendActivationEmail(c *gin.Context) {
 	user, err := h.repo.FindByEmail(req.Email)
 	if err != nil {
 		log.Println(err)
-		if err == errors.ErrUserNotFound {
+		if err == errors.ErrNotFound {
 			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		} else {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": errors.ErrInternalServerError.Error()})
