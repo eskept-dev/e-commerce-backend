@@ -12,6 +12,10 @@ docker run \
 -d postgres
 ```
 
+*Note*
+- Enable pgcrypto extension: `CREATE EXTENSION IF NOT EXISTS "pgcrypto";`
+- Enable uuid-ossp extension: `CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`
+
 # 2. Set up cache (Redis)
 
 ```bash
