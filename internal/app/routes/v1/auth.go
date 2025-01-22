@@ -38,7 +38,7 @@ func setupAuthGroup(group *gin.RouterGroup, ctx *context.AppContext) {
 	protectedGroupApi := group.Group("/auth")
 	{
 		// Apply auth middleware to protected routes
-		protectedGroupApi.Use(middleware.AuthMiddleware(ctx))
+		protectedGroupApi.Use(middleware.AuthMiddleware(userRepository, ctx))
 		{
 			protectedGroupApi.GET("/verify-token", authHandler.VerifyToken)
 		}
@@ -53,7 +53,7 @@ func setupUserGroup(group *gin.RouterGroup, ctx *context.AppContext) {
 	// Apply auth middleware to user routes
 	userGroupApi := group.Group("/users")
 	{
-		userGroupApi.Use(middleware.AuthMiddleware(ctx))
+		userGroupApi.Use(middleware.AuthMiddleware(userRepository, ctx))
 		userGroupApi.GET("/me", userHandler.GetMe)
 	}
 }
@@ -66,7 +66,7 @@ func setupProfileGroup(group *gin.RouterGroup, ctx *context.AppContext) {
 	// Apply auth middleware to user routes
 	userProfileGroupApi := group.Group("/profiles")
 	{
-		userProfileGroupApi.Use(middleware.AuthMiddleware(ctx))
+		userProfileGroupApi.Use(middleware.AuthMiddleware(userRepository, ctx))
 		userProfileGroupApi.POST("", userHandler.CreateUserProfile)
 	}
 }
