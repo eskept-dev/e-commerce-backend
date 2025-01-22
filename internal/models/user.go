@@ -16,10 +16,10 @@ const (
 )
 
 type User struct {
-	ID        uuid.UUID  `gorm:"type:uuid;primary_key;default:uuid_generate_v4()" json:"id"`
-	CreatedAt time.Time  `json:"createdAt"`
-	UpdatedAt time.Time  `json:"updatedAt"`
-	DeletedAt *time.Time `json:"deletedAt,omitempty"`
+	ID        uuid.UUID        `gorm:"type:uuid;primary_key;default:uuid_generate_v4()" json:"id"`
+	CreatedAt time.Time        `json:"createdAt"`
+	UpdatedAt time.Time        `json:"updatedAt"`
+	DeletedAt *time.Time       `json:"deletedAt,omitempty"`
 	Status    enums.UserStatus `json:"status" gorm:"default:pending_activation"`
 	Role      enums.UserRoles  `json:"role" gorm:"default:user_guest"`
 	Email     string           `json:"email" gorm:"uniqueIndex"`

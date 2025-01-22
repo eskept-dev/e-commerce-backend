@@ -14,9 +14,9 @@ type Router struct {
 }
 
 func (r *Router) NewRouter(ctx *context.AppContext) error {
-	gin.SetMode(gin.ReleaseMode)
+	gin.SetMode(gin.DebugMode)
 	r.routerEngine = gin.New()
-	
+
 	// Disable automatic trailing slash redirects
 	r.routerEngine.RedirectTrailingSlash = false
 	r.routerEngine.RedirectFixedPath = false
