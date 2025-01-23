@@ -8,33 +8,67 @@ import (
 )
 
 type Config struct {
+	App      AppConfig      `mapstructure:"app"`
 	Server   ServerConfig   `mapstructure:"server"`
 	Database DatabaseConfig `mapstructure:"database"`
 	Cache    CacheConfig    `mapstructure:"cache"`
+	JWT      JWTConfig      `mapstructure:"jwt"`
+	SMTP     SMTPConfig     `mapstructure:"smtp"`
+	Template TemplateConfig `mapstructure:"template"`
+}
+
+type AppConfig struct {
+	ActivationURL     string `mapstructure:"activation_url"`
+	AuthenticationURL string `mapstructure:"authentication_url"`
+	RegistrationURL   string `mapstructure:"registration_url"`
 }
 
 type ServerConfig struct {
-	Port string `mapstructure:"port"`
+	Port int `mapstructure:"port"`
 }
 
 type DatabaseConfig struct {
 	Host     string `mapstructure:"host"`
-	Port     string `mapstructure:"port"`
+	Port     int    `mapstructure:"port"`
 	User     string `mapstructure:"user"`
 	Password string `mapstructure:"password"`
-	DBName   string `mapstructure:"dbname"`
-	SSLMode  bool   `mapstructure:"sslmode"`
+	DBName   string `mapstructure:"db_name"`
+	SSLMode  string `mapstructure:"ssl_mode"`
 }
 
 type CacheConfig struct {
-	Host string `mapstructure:"host"`
-	Port string `mapstructure:"port"`
+	Host     string `mapstructure:"host"`
+	Port     int    `mapstructure:"port"`
+	Password string `mapstructure:"password"`
+}
+
+type JWTConfig struct {
+	Secret                            string `mapstructure:"secret"`
+	TokenExpirationTime               int    `mapstructure:"token_expiration_time"`
+	RefreshTokenExpirationTime        int    `mapstructure:"refresh_token_expiration_time"`
+	ActivationTokenExpirationTime     int    `mapstructure:"activation_token_expiration_time"`
+	AuthenticationTokenExpirationTime int    `mapstructure:"authentication_token_expiration_time"`
+	RegistrationTokenExpirationTime   int    `mapstructure:"registration_token_expiration_time"`
+}
+
+type TemplateConfig struct {
+	EmailActivation     string `mapstructure:"email_activation"`
+	EmailResetPassword  string `mapstructure:"email_reset_password"`
+	EmailAuthentication string `mapstructure:"email_authentication"`
+	EmailRegistration   string `mapstructure:"email_registration"`
+}
+
+type SMTPConfig struct {
+	Host     string `mapstructure:"host"`
+	Port     int    `mapstructure:"port"`
+	Email    string `mapstructure:"email"`
+	Password string `mapstructure:"password"`
 }
 
 func LoadConfig(path string) (*Config, error) {
 	env := os.Getenv("APP_ENV")
 	if env == "" {
-		env = "development" // Default to development if not specified
+		env = "development"
 	}
 
 	viper.AddConfigPath(path)

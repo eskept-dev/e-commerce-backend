@@ -1,14 +1,39 @@
+app:
+  activation_url: "http://localhost:5173/auth/register/activate"
+  authentication_url: "http://localhost:5173/auth/sign_in/authenticate-by-email"
+  registration_url: "http://localhost:5173/auth/sign_up"
+
 server:
-  port: "8080"
+  port: 8000
+
+jwt:
+  secret: "secret"
+  token_expiration_time: 3600
+  refresh_token_expiration_time: 86400
+  activation_token_expiration_time: 86400
+  authentication_token_expiration_time: 900
+  registration_token_expiration_time: 900
 
 database:
   host: "localhost"
-  port: "5432"
+  port: 5432
   user: "eskept"
   password: "password"
-  dbname: "dev_database"
-  sslmode: false
+  db_name: "dev_database"
+  ssl_mode: "disable"
 
 cache:
   host: "localhost"
-  port: "6379"
+  port: 6379
+
+smtp:
+  host: "smtp.localhost"
+  port: 587
+  email: "admin@localhost.com"
+  password: "password"
+  
+template:
+  email_activation: "templates/email/activation.html"
+  email_authentication: "templates/email/authentication.html"
+  email_reset_password: "templates/email/reset_password.html"
+  email_registration: "templates/email/registration.html"
