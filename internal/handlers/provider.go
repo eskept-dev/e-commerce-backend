@@ -6,9 +6,12 @@ import (
 	"eskept/internal/models"
 	"eskept/internal/schemas"
 	"eskept/internal/services"
+	"log"
 	"net/http"
+	"reflect"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 type ProviderHandler struct {
@@ -24,6 +27,90 @@ func NewProviderHandler(
 		appCtx:          appCtx,
 		ProviderService: providerService,
 	}
+}
+
+func (h *ProviderHandler) GetProviders(c *gin.Context) {
+	// TODO: Add pagination
+	keyword := c.Query("keyword")
+
+	providers, err := h.ProviderService.FindAll(&keyword)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": errors.ErrInternalServerError.Error()})
+		return
+	}
+
+	response := []schemas.ProviderResponse{}
+	for _, provider := range providers {
+		businessInformationResponse := schemas.BusinessInformation{
+			PhoneNumber: provider.BusinessInformation.PhoneNumber,
+			Email:       provider.BusinessInformation.Email,
+			Address:     provider.BusinessInformation.Address,
+			Website:     provider.BusinessInformation.Website,
+		}
+		contactInformationResponse := schemas.ContactInformation{
+			FirstName:   provider.ContactInformation.FirstName,
+			LastName:    provider.ContactInformation.LastName,
+			Role:        provider.ContactInformation.Role,
+			Gender:      provider.ContactInformation.Gender,
+			PhoneNumber: provider.ContactInformation.PhoneNumber,
+			Email:       provider.ContactInformation.Email,
+		}
+
+		response = append(response, schemas.ProviderResponse{
+			ID:                  provider.ID,
+			CreatedAt:           provider.CreatedAt,
+			UpdatedAt:           provider.UpdatedAt,
+			Name:                provider.Name,
+			CodeName:            provider.CodeName,
+			BusinessInformation: businessInformationResponse,
+			ContactInformation:  contactInformationResponse,
+			IsEnabled:           provider.IsEnabled,
+		})
+	}
+
+	c.JSON(http.StatusOK, response)
+}
+
+func (h *ProviderHandler) GetProvider(c *gin.Context) {
+	providerCodeName := c.Param("code_name")
+
+	provider, err := h.ProviderService.FindByCodeName(providerCodeName)
+	log.Println(err, reflect.TypeOf(err))
+	if err == gorm.ErrRecordNotFound {
+		c.JSON(http.StatusNotFound, gin.H{"error": errors.ErrNotFound})
+		return
+	} else if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": errors.ErrInternalServerError.Error()})
+		return
+	}
+
+	businessInformationResponse := schemas.BusinessInformation{
+		PhoneNumber: provider.BusinessInformation.PhoneNumber,
+		Email:       provider.BusinessInformation.Email,
+		Address:     provider.BusinessInformation.Address,
+		Website:     provider.BusinessInformation.Website,
+	}
+	contactInformationResponse := schemas.ContactInformation{
+		FirstName:   provider.ContactInformation.FirstName,
+		LastName:    provider.ContactInformation.LastName,
+		Role:        provider.ContactInformation.Role,
+		Gender:      provider.ContactInformation.Gender,
+		PhoneNumber: provider.ContactInformation.PhoneNumber,
+		Email:       provider.ContactInformation.Email,
+	}
+
+	response := schemas.ProviderResponse{
+		ID:                  provider.ID,
+		CreatedAt:           provider.CreatedAt,
+		UpdatedAt:           provider.UpdatedAt,
+		Name:                provider.Name,
+		CodeName:            provider.CodeName,
+		BusinessInformation: businessInformationResponse,
+		ContactInformation:  contactInformationResponse,
+		IsEnabled:           provider.IsEnabled,
+	}
+
+	c.JSON(http.StatusOK, response)
 }
 
 func (h *ProviderHandler) CreateProvider(c *gin.Context) {
@@ -90,10 +177,27 @@ func (h *ProviderHandler) CreateProvider(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
-func (h *ProviderHandler) GetProvider(c *gin.Context) {
+func (h *ProviderHandler) UpdateProvider(c *gin.Context) {
 	providerCodeName := c.Param("code_name")
 
+	var req schemas.ProviderUpdateRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
 	provider, err := h.ProviderService.FindByCodeName(providerCodeName)
+	if err == gorm.ErrRecordNotFound {
+		c.JSON(http.StatusNotFound, gin.H{"error": errors.ErrNotFound})
+		return
+	} else if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": errors.ErrInternalServerError.Error()})
+		return
+	}
+
+	provider.Name = req.Name
+	provider.IsEnabled = req.IsEnabled
+	err = h.ProviderService.UpdateProvider(provider)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": errors.ErrInternalServerError.Error()})
 		return
@@ -126,4 +230,25 @@ func (h *ProviderHandler) GetProvider(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, response)
+}
+
+func (h *ProviderHandler) DeleteProvider(c *gin.Context) {
+	providerCodeName := c.Param("code_name")
+
+	provider, err := h.ProviderService.FindByCodeName(providerCodeName)
+	if err == gorm.ErrRecordNotFound {
+		c.JSON(http.StatusNotFound, gin.H{"error": errors.ErrNotFound})
+		return
+	} else if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": errors.ErrInternalServerError.Error()})
+		return
+	}
+
+	err = h.ProviderService.DeleteProvider(provider)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": errors.ErrInternalServerError.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "OK"})
 }

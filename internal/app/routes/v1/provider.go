@@ -19,7 +19,10 @@ func setupProviderGroup(group *gin.RouterGroup, ctx *context.AppContext) {
 	providerGroupApi := group.Group("/providers")
 	{
 		providerGroupApi.Use(middleware.AuthMiddleware(userRepository, ctx))
+		providerGroupApi.GET("", providerHandler.GetProviders)
 		providerGroupApi.POST("", providerHandler.CreateProvider)
 		providerGroupApi.GET("/:code_name", providerHandler.GetProvider)
+		providerGroupApi.PUT("/:code_name", providerHandler.UpdateProvider)
+		providerGroupApi.DELETE("/:code_name", providerHandler.DeleteProvider)
 	}
 }

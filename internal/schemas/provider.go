@@ -45,3 +45,11 @@ type ProviderResponse struct {
 	BusinessInformation BusinessInformation `json:"businessInformation"`
 	ContactInformation  ContactInformation  `json:"contactInformation"`
 }
+
+type ProviderListRequest struct {
+	Keyword *string `json:"keyword"`
+}
+
+type ProviderListResponse struct {
+	Providers []ProviderResponse `json:"providers"`
+}

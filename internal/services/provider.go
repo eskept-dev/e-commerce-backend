@@ -40,10 +40,9 @@ func (s *ProviderService) FindByProviderId(providerId uuid.UUID) (*models.Provid
 	return s.repo.FindByProviderId(providerId)
 }
 
-func (s *ProviderService) ListProviders() ([]models.Provider, error) {
-	return s.repo.List()
-}
-
-func (s *ProviderService) SearchProviders(keyword string) ([]models.Provider, error) {
-	return s.repo.Search(keyword)
+func (s *ProviderService) FindAll(keyword *string) ([]models.Provider, error) {
+	if keyword == nil || *keyword == "" {
+		return s.repo.List()
+	}
+	return s.repo.Search(*keyword)
 }
