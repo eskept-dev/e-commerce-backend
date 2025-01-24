@@ -3,6 +3,7 @@ package repositories
 import (
 	"eskept/internal/app/context"
 	"eskept/internal/models"
+	"eskept/internal/types"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -48,19 +49,39 @@ func (r *ProviderRepository) FindByProviderId(providerId uuid.UUID) (*models.Pro
 	return &provider, nil
 }
 
-func (r *ProviderRepository) List() ([]models.Provider, error) {
+func (r *ProviderRepository) List(pagination *types.Pagination) ([]models.Provider, error) {
 	providers := []models.Provider{}
-	err := r.db.Find(&providers).Error
+	
+	// Count total records
+	var total int64
+	if err := r.db.Model(&models.Provider{}).Count(&total).Error; err != nil {
+		return nil, err
+	}
+	pagination.Total = total
+
+	// Apply pagination
+	offset := (pagination.Page - 1) * pagination.PageSize
+	err := r.db.Offset(offset).Limit(pagination.PageSize).Find(&providers).Error
 	if err != nil {
 		return nil, err
 	}
 	return providers, nil
 }
 
-func (r *ProviderRepository) Search(keyword string) ([]models.Provider, error) {
+func (r *ProviderRepository) Search(keyword string, pagination *types.Pagination) ([]models.Provider, error) {
 	searchValue := GenerateSearchValue(keyword)
 	providers := []models.Provider{}
-	err := r.db.Where("name LIKE ?", searchValue).Find(&providers).Error
+
+	// Count total records
+	var total int64
+	if err := r.db.Model(&models.Provider{}).Where("name LIKE ?", searchValue).Count(&total).Error; err != nil {
+		return nil, err
+	}
+	pagination.Total = total
+
+	// Apply pagination
+	offset := (pagination.Page - 1) * pagination.PageSize
+	err := r.db.Where("name LIKE ?", searchValue).Offset(offset).Limit(pagination.PageSize).Find(&providers).Error
 	if err != nil {
 		return nil, err
 	}

@@ -6,9 +6,11 @@ import (
 	"eskept/internal/models"
 	"eskept/internal/schemas"
 	"eskept/internal/services"
+	"eskept/internal/types"
 	"log"
 	"net/http"
 	"reflect"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -30,10 +32,25 @@ func NewProviderHandler(
 }
 
 func (h *ProviderHandler) GetProviders(c *gin.Context) {
-	// TODO: Add pagination
+	// Get pagination parameters
+	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
+	pageSize, _ := strconv.Atoi(c.DefaultQuery("pageSize", "10"))
+	
+	if page < 1 {
+		page = 1
+	}
+	if pageSize < 1 {
+		pageSize = 10
+	}
+
+	pagination := &types.Pagination{
+		Page:     page,
+		PageSize: pageSize,
+	}
+
 	keyword := c.Query("keyword")
 
-	providers, err := h.ProviderService.FindAll(&keyword)
+	providers, err := h.ProviderService.FindAll(&keyword, pagination)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": errors.ErrInternalServerError.Error()})
 		return
@@ -56,7 +73,7 @@ func (h *ProviderHandler) GetProviders(c *gin.Context) {
 			Email:       provider.ContactInformation.Email,
 		}
 
-		response = append(response, schemas.ProviderResponse{
+		providerResponse := schemas.ProviderResponse{
 			ID:                  provider.ID,
 			CreatedAt:           provider.CreatedAt,
 			UpdatedAt:           provider.UpdatedAt,
@@ -65,10 +82,14 @@ func (h *ProviderHandler) GetProviders(c *gin.Context) {
 			BusinessInformation: businessInformationResponse,
 			ContactInformation:  contactInformationResponse,
 			IsEnabled:           provider.IsEnabled,
-		})
+		}
+		response = append(response, providerResponse)
 	}
 
-	c.JSON(http.StatusOK, response)
+	c.JSON(http.StatusOK, types.PaginatedResponse{
+		Data:       response,
+		Pagination: *pagination,
+	})
 }
 
 func (h *ProviderHandler) GetProvider(c *gin.Context) {

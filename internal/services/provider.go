@@ -4,6 +4,7 @@ import (
 	"eskept/internal/app/context"
 	"eskept/internal/models"
 	"eskept/internal/repositories"
+	"eskept/internal/types"
 
 	"github.com/google/uuid"
 )
@@ -40,9 +41,9 @@ func (s *ProviderService) FindByProviderId(providerId uuid.UUID) (*models.Provid
 	return s.repo.FindByProviderId(providerId)
 }
 
-func (s *ProviderService) FindAll(keyword *string) ([]models.Provider, error) {
+func (s *ProviderService) FindAll(keyword *string, pagination *types.Pagination) ([]models.Provider, error) {
 	if keyword == nil || *keyword == "" {
-		return s.repo.List()
+		return s.repo.List(pagination)
 	}
-	return s.repo.Search(*keyword)
+	return s.repo.Search(*keyword, pagination)
 }
