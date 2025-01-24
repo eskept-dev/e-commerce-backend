@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"eskept/internal/app/context"
 	"eskept/internal/models"
 
 	"gorm.io/gorm"
@@ -8,6 +9,12 @@ import (
 
 type ServiceRepository struct {
 	db *gorm.DB
+}
+
+func NewServiceRepository(ctx *context.AppContext) *ServiceRepository {
+	return &ServiceRepository{
+		db: ctx.DB,
+	}
 }
 
 func (r *ServiceRepository) Create(service *models.Service) error {
