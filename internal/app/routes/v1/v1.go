@@ -11,4 +11,5 @@ func SetupV1Routes(group *gin.RouterGroup, ctx *context.AppContext) {
 	setupUserGroup(group, ctx)
 	setupProfileGroup(group, ctx)
 	setupBusinessGroup(group, ctx)
+	setupProviderGroup(group, ctx)
 }

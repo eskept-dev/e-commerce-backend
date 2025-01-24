@@ -12,5 +12,6 @@ func Migrate(db *gorm.DB) error {
 		&models.UserProfile{},
 		&models.BusinessProfile{},
 		&models.Service{},
+		&models.Provider{},
 	)
 }
