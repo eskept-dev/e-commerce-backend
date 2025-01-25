@@ -62,11 +62,10 @@ func (c ContactInformation) Value() (driver.Value, error) {
 
 type Provider struct {
 	BaseModel
-	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
-	IsEnabled bool           `gorm:"default:true" json:"isEnabled"`
+	IsEnabled bool `gorm:"default:true" json:"isEnabled"`
 
 	Name     string `gorm:"type:varchar(255)" json:"name"`
-	CodeName string `gorm:"type:varchar(255)" json:"codeName"`
+	CodeName string `gorm:"type:varchar(255);unique" json:"codeName"`
 
 	BusinessInformation BusinessInformation `gorm:"type:jsonb" json:"businessInformation"`
 	ContactInformation  ContactInformation  `gorm:"type:jsonb" json:"contactInformation"`

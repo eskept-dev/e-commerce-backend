@@ -9,11 +9,11 @@ import (
 
 type Service struct {
 	BaseModel
-	DeletedAt gorm.DeletedAt    `gorm:"index" json:"deleted_at"`
-	IsEnabled bool              `gorm:"default:true" json:"is_enabled"`
-	Name      string            `gorm:"type:varchar(255)" json:"name"`
-	Code      string            `gorm:"type:varchar(255);unique" json:"code"`
-	Type      enums.ServiceType `gorm:"type:varchar(255)" json:"type"`
+	IsEnabled bool `gorm:"default:true" json:"is_enabled"`
+
+	Name string            `gorm:"type:varchar(255)" json:"name"`
+	Code string            `gorm:"type:varchar(255);unique" json:"code"`
+	Type enums.ServiceType `gorm:"type:varchar(255)" json:"type"`
 }
 
 func (Service) TableName() string {

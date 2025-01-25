@@ -46,10 +46,6 @@ type ProviderResponse struct {
 	ContactInformation  ContactInformation  `json:"contactInformation"`
 }
 
-type ProviderListRequest struct {
-	Keyword *string `json:"keyword"`
-}
-
 type ProviderListResponse struct {
 	Providers []ProviderResponse `json:"providers"`
 }

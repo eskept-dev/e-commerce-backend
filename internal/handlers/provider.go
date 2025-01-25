@@ -35,7 +35,7 @@ func (h *ProviderHandler) GetProviders(c *gin.Context) {
 	// Get pagination parameters
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	pageSize, _ := strconv.Atoi(c.DefaultQuery("pageSize", "10"))
-	
+
 	if page < 1 {
 		page = 1
 	}

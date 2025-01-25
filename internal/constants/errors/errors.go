@@ -22,6 +22,7 @@ var (
 
 	// Validation errors
 	ErrInvalidRequest = errors.New("INVALID_REQUEST")
+	ErrAlreadyDeleted = errors.New("ALREADY_DELETED")
 
 	// User Profile errors
 	ErrInvalidProfile = errors.New("INVALID_PROFILE")

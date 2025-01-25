@@ -4,9 +4,7 @@ import (
 	"eskept/internal/constants/enums"
 	"log"
 	"strings"
-	"time"
 
-	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
@@ -16,14 +14,12 @@ const (
 )
 
 type User struct {
-	ID        uuid.UUID        `gorm:"type:uuid;primary_key;default:uuid_generate_v4()" json:"id"`
-	CreatedAt time.Time        `json:"createdAt"`
-	UpdatedAt time.Time        `json:"updatedAt"`
-	DeletedAt *time.Time       `json:"deletedAt,omitempty"`
-	Status    enums.UserStatus `json:"status" gorm:"default:pending_activation"`
-	Role      enums.UserRoles  `json:"role" gorm:"default:user_guest"`
-	Email     string           `json:"email" gorm:"uniqueIndex"`
-	Password  string           `json:"-"` // Hide password from JSON responses
+	BaseModel
+
+	Status   enums.UserStatus `json:"status" gorm:"default:pending_activation"`
+	Role     enums.UserRoles  `json:"role" gorm:"default:user_guest"`
+	Email    string           `json:"email" gorm:"uniqueIndex"`
+	Password string           `json:"-"` // Hide password from JSON responses
 }
 
 func (u *User) TableName() string {
