@@ -120,7 +120,7 @@ func storeFlattenedLocations(appCtx *context.AppContext, locations []Location) e
 }
 
 func fetchAndStoreLocations(appCtx *context.AppContext) {
-	resp, err := http.Get("https://provinces.open-api.vn/api?depth=3")
+	resp, err := http.Get(appCtx.Cfg.Location.VietnamProvinceAPI)
 	if err != nil {
 		log.Println("Error fetching data:", err)
 		return

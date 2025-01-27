@@ -37,3 +37,7 @@ template:
   email_authentication: "templates/email/authentication.html"
   email_reset_password: "templates/email/reset_password.html"
   email_registration: "templates/email/registration.html"
+
+location:
+  vietnam_province_api: "https://provinces.open-api.vn/api?depth=3"
+  osm_url: "https://nominatim.openstreetmap.org"

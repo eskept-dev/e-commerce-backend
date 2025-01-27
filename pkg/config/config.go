@@ -15,6 +15,7 @@ type Config struct {
 	JWT      JWTConfig      `mapstructure:"jwt"`
 	SMTP     SMTPConfig     `mapstructure:"smtp"`
 	Template TemplateConfig `mapstructure:"template"`
+	Location LocationConfig `mapstructure:"location"`
 }
 
 type AppConfig struct {
@@ -63,6 +64,11 @@ type SMTPConfig struct {
 	Port     int    `mapstructure:"port"`
 	Email    string `mapstructure:"email"`
 	Password string `mapstructure:"password"`
+}
+
+type LocationConfig struct {
+	VietnamProvinceAPI string `mapstructure:"vietnam_province_api"`
+	OSMURL             string `mapstructure:"osm_url"`
 }
 
 func LoadConfig(path string) (*Config, error) {
