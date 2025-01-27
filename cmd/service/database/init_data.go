@@ -1,42 +1,15 @@
-package main
+package database
 
 import (
 	"eskept/internal/app/context"
 	"eskept/internal/constants/enums"
 	"eskept/internal/models"
-	"eskept/pkg/cache"
-	"eskept/pkg/config"
-	"eskept/pkg/database"
 	"fmt"
 	"log"
 )
 
-func main() {
-	// Load configuration
-	cfg, err := config.LoadConfig("./config")
-	if err != nil {
-		log.Fatalf("Failed to load config: %v", err)
-	}
-
-	// Initialize database connection
-	db, err := database.InitPostgres(cfg.Database)
-	if err != nil {
-		log.Fatalf("Failed to initialize database: %v", err)
-	}
-
-	// Initialize cache connection
-	cacheRedis, err := cache.InitRedis(&cfg.Cache)
-	if err != nil {
-		log.Fatalf("Failed to initialize cache: %v", err)
-	}
-
-	// Initialize app context properly
-	appCtx := &context.AppContext{
-		DB:    db,
-		Cache: cacheRedis,
-		Cfg:   cfg,
-	}
-
+// InitData initializes the data
+func InitData(appCtx *context.AppContext) {
 	// Default services to create
 	services := []models.Service{
 		{
